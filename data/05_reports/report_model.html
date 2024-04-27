@@ -83,7 +83,7 @@
         <h1 class="header" style="text-align: center;">Regression Metrics Report</h1>
         <div class="header" style="display: flex; justify-content: center; align-items: center; text-align: center;">
             
-                <img src="/home/manuel/Documents/projects/templates/template-hooks-mit/data/02_intermediate/regression_plots.png" alt="Graph" id="graph" style="max-width: 30%; cursor: zoom-in;"> <!-- Set left margin to 0 -->
+                <img src="/home/manuel/Documents/projects/libs/mlpr/data/02_intermediate/regression_plots.png" alt="Graph" id="graph" style="max-width: 30%; cursor: zoom-in;"> <!-- Set left margin to 0 -->
             
         </div>
     </div>
@@ -93,11 +93,10 @@
     <h2>Kolmogorov-Smirnov: (0.1510574018126888, 0.0010310446878578096)</h2>
 
     <h2>Confusion Matrix:</h2>
-    <pre>[[24 46 18  0  0]
- [ 9 35 39 11  1]
- [ 0 20 33 17  0]
- [ 0  1 17 27 13]
- [ 0  0  4  8  8]]</pre>
+    <pre>[[54 57  2  0]
+ [16 70 21  0]
+ [ 0 37 37  3]
+ [ 0  6 25  3]]</pre>
 
     <h2>Confusion Matrix Metrics:</h2>
     <table>
@@ -109,11 +108,11 @@
             <th>Accuracy</th>
         </tr>
         <tr>
-            <td>[0.72727273 0.34313725 0.2972973  0.42857143 0.36363636]</td>
-            <td>[0.27272727 0.36842105 0.47142857 0.46551724 0.4       ]</td>
-            <td>[0.39669421 0.35532995 0.36464088 0.44628099 0.38095238]</td>
-            <td>[88 95 70 58 20]</td>
-            <td>0.38368580060422963</td>
+            <td>[0.77142857 0.41176471 0.43529412 0.5       ]</td>
+            <td>[0.47787611 0.65420561 0.48051948 0.08823529]</td>
+            <td>[0.59016393 0.50541516 0.45679012 0.15      ]</td>
+            <td>[113 107  77  34]</td>
+            <td>0.4954682779456193</td>
         </tr>
     </table>
 
@@ -130,12 +129,12 @@
                 <th>Support</th>
             </tr>
             <tr>
-                <td>0.29436673188680906</td>
-                <td>0.7794561933534743</td>
-                <td>[0.7852349  0.72727273]</td>
-                <td>[0.96296296 0.27272727]</td>
-                <td>[0.8650647  0.39669421]</td>
-                <td>[243  88]</td>
+                <td>0.4452885840055415</td>
+                <td>0.7734138972809668</td>
+                <td>[0.77394636 0.77142857]</td>
+                <td>[0.9266055  0.47787611]</td>
+                <td>[0.8434238  0.59016393]</td>
+                <td>[218 113]</td>
             </tr>
         </table>
     
@@ -150,12 +149,12 @@
                 <th>Support</th>
             </tr>
             <tr>
-                <td>0.08270233705021068</td>
-                <td>0.6163141993957704</td>
-                <td>[0.73799127 0.34313725]</td>
-                <td>[0.71610169 0.36842105]</td>
-                <td>[0.72688172 0.35532995]</td>
-                <td>[236  95]</td>
+                <td>0.180085703437178</td>
+                <td>0.5861027190332326</td>
+                <td>[0.77018634 0.41176471]</td>
+                <td>[0.55357143 0.65420561]</td>
+                <td>[0.64415584 0.50541516]</td>
+                <td>[224 107]</td>
             </tr>
         </table>
     
@@ -170,12 +169,12 @@
                 <th>Support</th>
             </tr>
             <tr>
-                <td>0.142119853057177</td>
-                <td>0.6525679758308157</td>
-                <td>[0.83181818 0.2972973 ]</td>
-                <td>[0.70114943 0.47142857]</td>
-                <td>[0.76091476 0.36464088]</td>
-                <td>[261  70]</td>
+                <td>0.2813579394059016</td>
+                <td>0.7341389728096677</td>
+                <td>[0.83739837 0.43529412]</td>
+                <td>[0.81102362 0.48051948]</td>
+                <td>[0.824      0.45679012]</td>
+                <td>[254  77]</td>
             </tr>
         </table>
     
@@ -190,32 +189,12 @@
                 <th>Support</th>
             </tr>
             <tr>
-                <td>0.3226949271600037</td>
-                <td>0.797583081570997</td>
-                <td>[0.88432836 0.42857143]</td>
-                <td>[0.86813187 0.46551724]</td>
-                <td>[0.87615527 0.44628099]</td>
-                <td>[273  58]</td>
-            </tr>
-        </table>
-    
-        <h3>Kappa Score for 4:</h3>
-        <table>
-            <tr>
-                <th>Score</th>
-                <th>Accuracy</th>
-                <th>Precision</th>
-                <th>Recall</th>
-                <th>F1 Score</th>
-                <th>Support</th>
-            </tr>
-            <tr>
-                <td>0.33911841499001694</td>
-                <td>0.9214501510574018</td>
-                <td>[0.96116505 0.36363636]</td>
-                <td>[0.95498392 0.4       ]</td>
-                <td>[0.95806452 0.38095238]</td>
-                <td>[311  20]</td>
+                <td>0.12297381546134645</td>
+                <td>0.8972809667673716</td>
+                <td>[0.90461538 0.5       ]</td>
+                <td>[0.98989899 0.08823529]</td>
+                <td>[0.94533762 0.15      ]</td>
+                <td>[297  34]</td>
             </tr>
         </table>
     
