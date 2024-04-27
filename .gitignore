@@ -11,6 +11,7 @@ main_*.py
 # Ingnoring infos in local folder
 conf/local/*
 !conf/local/.placeholder
+.flake8
 .nbqa-flake8
 .pre-commit-config.yaml
 .pre-commit-hooks.yaml
