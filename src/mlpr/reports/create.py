@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional
+
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -12,8 +13,10 @@ class ReportGenerator:
             template_dir (str): The directory where the template file is located.
         """
         self.template_dir = template_dir
-        
-    def render(self, metrics: Dict[str, Any], template_file: str, output_file: str, image_path: Optional[str] = None) -> None:
+
+    def render(
+        self, metrics: Dict[str, Any], template_file: str, output_file: str, image_path: Optional[str] = None
+    ) -> None:
         """
         Create a report using a template and metrics.
 
@@ -33,7 +36,7 @@ class ReportGenerator:
 
         report = template.render(metrics=metrics, image_path=image_path)
         try:
-            with open(output_file, 'w') as f:
+            with open(output_file, "w") as f:
                 f.write(report)
             return "Report created successfully."
         except Exception as e:

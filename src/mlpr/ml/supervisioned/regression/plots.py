@@ -1,14 +1,13 @@
-from typing import List, Tuple, Optional, Dict, Any
+from typing import Any, Dict, List, Optional, Tuple
 
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import ks_2samp, gaussian_kde
-from statsmodels.distributions.empirical_distribution import ECDF
-
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
 from matplotlib.axes import Axes
-import matplotlib as mpl
+from matplotlib.figure import Figure
+from scipy.stats import gaussian_kde, ks_2samp
+from statsmodels.distributions.empirical_distribution import ECDF
 
 
 class RegressionPlots:
@@ -28,8 +27,7 @@ class RegressionPlots:
         self.color_palette = color_palette
         self.original_prop_cycle = None
         if self.color_palette is not None:
-            mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=self.color_palette)
-
+            mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=self.color_palette)
 
     def check_if_inline(self, show_inline: bool):
         if not show_inline:
@@ -45,25 +43,25 @@ class RegressionPlots:
 
     def check_color_map(self, step: str = "before"):
         if (self.color_palette is not None) and (step == "before"):
-            self.original_prop_cycle = mpl.rcParams['axes.prop_cycle']
-            mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=self.color_palette)
+            self.original_prop_cycle = mpl.rcParams["axes.prop_cycle"]
+            mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=self.color_palette)
         elif (self.color_palette is not None) and (step == "after"):
-            mpl.rcParams['axes.prop_cycle'] = self.original_prop_cycle
+            mpl.rcParams["axes.prop_cycle"] = self.original_prop_cycle
         return None
-    
+
     def scatter(
         self,
         y_true_col: str,
         y_pred_col: str,
-        label: Optional[str]=None,
-        ax: Optional[Axes]=None,
-        figsize: Tuple[int, int]=(12, 6),
-        linestyle: str="--",
-        linecolor: str="r",
+        label: Optional[str] = None,
+        ax: Optional[Axes] = None,
+        figsize: Tuple[int, int] = (12, 6),
+        linestyle: str = "--",
+        linecolor: str = "r",
         show_inline: bool = False,
         corr_pos_x: float = 0.05,
         corr_pos_y: float = 0.95,
-        **kwargs: Dict[str, Any]
+        **kwargs: Dict[str, Any],
     ) -> Tuple[Figure, Axes]:
         """
         Create a scatter plot of the true vs predicted values.
@@ -113,7 +111,7 @@ class RegressionPlots:
         corr = self.data[y_true_col].corr(self.data[y_pred_col])
 
         # Add the correlation to the plot
-        ax.text(corr_pos_x, corr_pos_y, f'Correlation: {corr:.2f}', transform=ax.transAxes, verticalalignment='top')
+        ax.text(corr_pos_x, corr_pos_y, f"Correlation: {corr:.2f}", transform=ax.transAxes, verticalalignment="top")
 
         ax.set_xlabel(y_true_col)
         ax.set_ylabel(y_pred_col)
@@ -137,7 +135,7 @@ class RegressionPlots:
         ax: Optional[Axes] = None,
         figsize: Tuple[int, int] = (12, 6),
         show_inline: bool = False,
-        **kwargs: Dict[str, Any]
+        **kwargs: Dict[str, Any],
     ) -> Tuple[Figure, Axes]:
         """
         Plot the empirical cumulative distribution function (ECDF) of the true and predicted values.
@@ -175,7 +173,7 @@ class RegressionPlots:
         ax.plot(ecdf_true.x, ecdf_true.y, label=y_true_col, **kwargs)
         ax.plot(ecdf_pred.x, ecdf_pred.y, label=y_pred_col, **kwargs)
 
-        ax.set_ylabel('ECDF')
+        ax.set_ylabel("ECDF")
         ax.set_title(f"ks_stats: {ks_stats:.2f}")
 
         ax.legend()
@@ -187,14 +185,14 @@ class RegressionPlots:
         fig.tight_layout()
 
         return fig, ax
-    
+
     def plot_kde(
         self,
         columns: List[str],
         ax: Optional[Axes] = None,
         figsize: Tuple[int, int] = (12, 6),
         show_inline: bool = False,
-        **kwargs: Dict[str, Any]
+        **kwargs: Dict[str, Any],
     ) -> Tuple[Figure, Axes]:
         """
         Plot the kernel density estimate (KDE) for the specified columns.
@@ -248,10 +246,10 @@ class RegressionPlots:
         label: Optional[str] = None,
         ax: Optional[Axes] = None,
         figsize: Tuple[int, int] = (12, 6),
-        linestyle: str="--",
-        linecolor: str="r",
+        linestyle: str = "--",
+        linecolor: str = "r",
         show_inline: bool = False,
-        **kwargs: Dict[str, Any]
+        **kwargs: Dict[str, Any],
     ) -> Tuple[Figure, Axes]:
         """
         Plot a histogram of the error between the true and predicted values.
@@ -301,14 +299,14 @@ class RegressionPlots:
         fig.tight_layout()
 
         return fig, ax
-    
+
     def grid_plot(
-            self,
-            plot_functions: List[List[str]] = [['scatter', 'plot_ecdf'], ['plot_kde', 'plot_error_hist']],
-            plot_args: Dict[str, Dict[str, Any]] = {},
-            figsize: Tuple[int, int] = (18, 12),
-            **kwargs: Dict[str, Any]
-        ) -> Tuple[Figure, Axes]:
+        self,
+        plot_functions: List[List[str]] = [["scatter", "plot_ecdf"], ["plot_kde", "plot_error_hist"]],
+        plot_args: Dict[str, Dict[str, Any]] = {},
+        figsize: Tuple[int, int] = (18, 12),
+        **kwargs: Dict[str, Any],
+    ) -> Tuple[Figure, Axes]:
         """
         Plot a grid of plots using the specified plot functions.
 
@@ -334,7 +332,7 @@ class RegressionPlots:
         grid_size = len(plot_functions), max_cols
 
         fig, axs = plt.subplots(*grid_size, figsize=figsize)
-        
+
         self.check_color_map()
 
         # Ensure axs is always a 2D array
@@ -352,7 +350,7 @@ class RegressionPlots:
                     func(ax=axs[i, j], **args)
                 else:
                     # If there is no corresponding plot function, hide the axis
-                    axs[i, j].axis('off')
+                    axs[i, j].axis("off")
 
         self.check_color_map("after")
 

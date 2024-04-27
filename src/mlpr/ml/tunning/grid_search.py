@@ -1,21 +1,22 @@
-from typing import Dict, Tuple, Any
-from sklearn.base import BaseEstimator
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import mean_squared_error
+from typing import Any, Dict, Tuple
+
 import numpy as np
+from sklearn.base import BaseEstimator
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.preprocessing import StandardScaler
+
 
 class GridSearch:
     def __init__(
-            self,
-            X: np.ndarray,
-            y: np.ndarray,
-            models_params: Dict[BaseEstimator, Dict[str, Any]],
-            params_split: dict={},
-            normalize: bool = True,
-            params_norm: dict={}
-        ):
+        self,
+        X: np.ndarray,
+        y: np.ndarray,
+        models_params: Dict[BaseEstimator, Dict[str, Any]],
+        params_split: dict = {},
+        normalize: bool = True,
+        params_norm: dict = {},
+    ):
         """
         Initialize GridSearch object.
 
@@ -45,7 +46,9 @@ class GridSearch:
         self.best_params = None
         self.lowest_rmse = np.inf
 
-    def split_data(self, X: np.ndarray, y: np.ndarray, **kwargs) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    def split_data(
+        self, X: np.ndarray, y: np.ndarray, **kwargs
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """
         Split data into training and test sets.
 
@@ -94,7 +97,7 @@ class GridSearch:
             self.best_model = grid.best_estimator_  # store the trained model
             self.best_params = grid.best_params_
             self.best_score_ = grid.best_score_
-            
+
         return self
 
     def get_best_model(self) -> Tuple[BaseEstimator, Dict[str, Any]]:
@@ -107,7 +110,7 @@ class GridSearch:
             Best model and its parameters.
         """
         return self.best_model, self.best_params
-    
+
     def search(self):
         """
         Perform grid search for each model.
