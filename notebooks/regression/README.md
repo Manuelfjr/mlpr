@@ -9,13 +9,16 @@ First, import the necessary modules from the library:
 from mlpr.ml.regression import metrics, plots
 from mlpr.ml.tunning.grid_search import GridSearch
 from mlpr.reports.reports import ReportGenerator
+
+# for experiment, we will use the diabetes
+# dataset from scikit-learn
+import sklearn.datasets as load_diabetes
 ```
 
 ## Loading the Data
 Load your dataset. In this example, we're using the diabetes dataset from sklearn:
 
 ```python
-import sklearn.datasets as load_diabetes
 content = load_diabetes()
 data = pd.DataFrame(
     content["data"],
