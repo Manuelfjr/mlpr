@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
 from jinja2 import Environment, FileSystemLoader
 
+
 class ReportGenerator:
     def __init__(self, template_dir: str) -> None:
         """
