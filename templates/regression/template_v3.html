@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            transition: background-color 0.5s;
+        }
+        h1, h2 {
+            color: #333;
+            transition: color 0.5s;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header img {
+            max-width: 30%;
+            height: auto;
+            cursor: zoom-in;
+            margin-right: 0; /* Remove right margin */
+            align-self: flex-start;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: #ddd;
+        }
+        #graph:hover {
+            transform: scale(1.5); /* Adjust as needed */
+        }
+        #graph {
+            transition: transform 0.25s ease;
+        }
+
+        #graph:active { /* When the image is clicked */
+            transform: scale(1.5); /* Adjust as needed */
+            max-width: 90%; /* Limit the maximum width */
+            max-height: 90vh; /* Limit the maximum height */
+        }
+    </style>
+</head>
+<body>
+    
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 2em;">
+        <h1 class="header" style="text-align: center;">Regression Metrics Report</h1>
+        <div class="header" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+            {% if image_path %}
+                <img src="{{ image_path }}" alt="Graph" id="graph" style="max-width: 30%; cursor: zoom-in;"> <!-- Set left margin to 0 -->
+            {% endif %}
+        </div>
+    </div>
+
+    <h2>MAPE: {{ metrics['mape'] }}</h2>
+    <h2>RMSE: {{ metrics['rmse'] }}</h2>
+    <h2>Kolmogorov-Smirnov: {{ metrics['kolmogorov_smirnov'] }}</h2>
+
+    <h2>Confusion Matrix:</h2>
+    <pre>{{ metrics['confusion_matrix'][0] }}</pre>
+
+    <h2>Confusion Matrix Metrics:</h2>
+    <table>
+        <tr>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1 Score</th>
+            <th>Support</th>
+            <th>Accuracy</th>
+        </tr>
+        <tr>
+            <td>{{ metrics['confusion_matrix'][1]['precision'] }}</td>
+            <td>{{ metrics['confusion_matrix'][1]['recall'] }}</td>
+            <td>{{ metrics['confusion_matrix'][1]['f1_score'] }}</td>
+            <td>{{ metrics['confusion_matrix'][1]['support'] }}</td>
+            <td>{{ metrics['confusion_matrix'][1]['accuracy'] }}</td>
+        </tr>
+    </table>
+
+    <h2>Kappa Scores:</h2>
+    {% for k, v in metrics['calculate_kappa'].items() %}
+        <h3>Kappa Score for {{ k }}:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>{{ v['kappa_score'] }}</td>
+                <td>{{ v['metrics']['accuracy'] }}</td>
+                <td>{{ v['metrics']['precision'] }}</td>
+                <td>{{ v['metrics']['recall'] }}</td>
+                <td>{{ v['metrics']['f1_score'] }}</td>
+                <td>{{ v['metrics']['support'] }}</td>
+            </tr>
+        </table>
+    {% endfor %}
+    <footer>
+        <p>Contact us at <a href="mailto:ferreira.jr.ufpb@gmail.com">ferreira.jr.ufpb@gmail.com</a></p>
+    </footer>
+    <script>
+        document.getElementById('graph').addEventListener('click', function() {
+            var src = this.src;
+            var overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            overlay.style.cursor = 'zoom-out';
+            overlay.innerHTML = '<img src="' + src + '" style="width: 80%; height: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">';
+            overlay.addEventListener('click', function() {
+                this.parentNode.removeChild(this);
+            });
+            document.body.appendChild(overlay);
+        });
+        var toggleDarkMode = document.getElementById('toggle-dark-mode');
+        toggleDarkMode.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+</body>
+</html>

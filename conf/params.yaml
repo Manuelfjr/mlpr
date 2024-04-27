@@ -1,0 +1,22 @@
+selected_datasets:
+  - diabetes
+  - example
+
+datasets:
+  example:
+    func: read_csv
+    path: http://example.com/
+    kwargs:
+      sep: |
+        "\s+""
+      skiprows: 22
+      header: null
+  diabetes:
+    func: sklearn
+    path: load_diabetes
+    kwargs: {}
+
+ml:
+  holdout: 
+    test_size: 0.2
+    random_state: 42

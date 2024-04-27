@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header img {
+            max-width: 30%;
+            height: auto;
+            cursor: zoom-in;
+            margin-right: 0; /* Remove right margin */
+            align-self: flex-start;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1 class="header" style="text-align: left;">Regression Metrics Report</h1>
+    <div class="header" style="display: flex; justify-content: space-between; align-items: center; text-align: right;">
+        {% if image_path %}
+            <img src="{{ image_path }}" alt="Graph" id="graph" style="max-width: 30%; cursor: zoom-in;"> <!-- Set left margin to 0 -->
+        {% endif %}
+    </div>
+
+    <h2>MAPE: {{ metrics['mape'] }}</h2>
+    <h2>RMSE: {{ metrics['rmse'] }}</h2>
+    <h2>Kolmogorov-Smirnov: {{ metrics['kolmogorov_smirnov'] }}</h2>
+
+    <h2>Confusion Matrix:</h2>
+    <pre>{{ metrics['confusion_matrix'][0] }}</pre>
+
+    <h2>Confusion Matrix Metrics:</h2>
+    <table>
+        <tr>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1 Score</th>
+            <th>Support</th>
+            <th>Accuracy</th>
+        </tr>
+        <tr>
+            <td>{{ metrics['confusion_matrix'][1]['precision'] }}</td>
+            <td>{{ metrics['confusion_matrix'][1]['recall'] }}</td>
+            <td>{{ metrics['confusion_matrix'][1]['f1_score'] }}</td>
+            <td>{{ metrics['confusion_matrix'][1]['support'] }}</td>
+            <td>{{ metrics['confusion_matrix'][1]['accuracy'] }}</td>
+        </tr>
+    </table>
+
+    <h2>Kappa Scores:</h2>
+    {% for k, v in metrics['calculate_kappa'].items() %}
+        <h3>Kappa Score for {{ k }}:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>{{ v['kappa_score'] }}</td>
+                <td>{{ v['metrics']['accuracy'] }}</td>
+                <td>{{ v['metrics']['precision'] }}</td>
+                <td>{{ v['metrics']['recall'] }}</td>
+                <td>{{ v['metrics']['f1_score'] }}</td>
+                <td>{{ v['metrics']['support'] }}</td>
+            </tr>
+        </table>
+    {% endfor %}
+
+    <script>
+        document.getElementById('graph').addEventListener('click', function() {
+            var src = this.src;
+            var overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            overlay.style.cursor = 'zoom-out';
+            overlay.innerHTML = '<img src="' + src + '" style="width: 80%; height: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">';
+            overlay.addEventListener('click', function() {
+                this.parentNode.removeChild(this);
+            });
+            document.body.appendChild(overlay);
+        });
+    </script>
+</body>
+</html>

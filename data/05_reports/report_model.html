@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            transition: background-color 0.5s;
+        }
+        h1, h2 {
+            color: #333;
+            transition: color 0.5s;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header img {
+            max-width: 30%;
+            height: auto;
+            cursor: zoom-in;
+            margin-right: 0; /* Remove right margin */
+            align-self: flex-start;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: #ddd;
+        }
+        #graph:hover {
+            transform: scale(1.5); /* Adjust as needed */
+        }
+        #graph {
+            transition: transform 0.25s ease;
+        }
+
+        #graph:active { /* When the image is clicked */
+            transform: scale(1.5); /* Adjust as needed */
+            max-width: 90%; /* Limit the maximum width */
+            max-height: 90vh; /* Limit the maximum height */
+        }
+    </style>
+</head>
+<body>
+    
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 2em;">
+        <h1 class="header" style="text-align: center;">Regression Metrics Report</h1>
+        <div class="header" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+            
+                <img src="/home/manuel/Documents/projects/templates/template-hooks-mit/data/02_intermediate/regression_plots.png" alt="Graph" id="graph" style="max-width: 30%; cursor: zoom-in;"> <!-- Set left margin to 0 -->
+            
+        </div>
+    </div>
+
+    <h2>MAPE: 39.594540526956436</h2>
+    <h2>RMSE: 54.09419440169204</h2>
+    <h2>Kolmogorov-Smirnov: (0.1510574018126888, 0.0010310446878578096)</h2>
+
+    <h2>Confusion Matrix:</h2>
+    <pre>[[24 46 18  0  0]
+ [ 9 35 39 11  1]
+ [ 0 20 33 17  0]
+ [ 0  1 17 27 13]
+ [ 0  0  4  8  8]]</pre>
+
+    <h2>Confusion Matrix Metrics:</h2>
+    <table>
+        <tr>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1 Score</th>
+            <th>Support</th>
+            <th>Accuracy</th>
+        </tr>
+        <tr>
+            <td>[0.72727273 0.34313725 0.2972973  0.42857143 0.36363636]</td>
+            <td>[0.27272727 0.36842105 0.47142857 0.46551724 0.4       ]</td>
+            <td>[0.39669421 0.35532995 0.36464088 0.44628099 0.38095238]</td>
+            <td>[88 95 70 58 20]</td>
+            <td>0.38368580060422963</td>
+        </tr>
+    </table>
+
+    <h2>Kappa Scores:</h2>
+    
+        <h3>Kappa Score for 0:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.29436673188680906</td>
+                <td>0.7794561933534743</td>
+                <td>[0.7852349  0.72727273]</td>
+                <td>[0.96296296 0.27272727]</td>
+                <td>[0.8650647  0.39669421]</td>
+                <td>[243  88]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 1:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.08270233705021068</td>
+                <td>0.6163141993957704</td>
+                <td>[0.73799127 0.34313725]</td>
+                <td>[0.71610169 0.36842105]</td>
+                <td>[0.72688172 0.35532995]</td>
+                <td>[236  95]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 2:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.142119853057177</td>
+                <td>0.6525679758308157</td>
+                <td>[0.83181818 0.2972973 ]</td>
+                <td>[0.70114943 0.47142857]</td>
+                <td>[0.76091476 0.36464088]</td>
+                <td>[261  70]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 3:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.3226949271600037</td>
+                <td>0.797583081570997</td>
+                <td>[0.88432836 0.42857143]</td>
+                <td>[0.86813187 0.46551724]</td>
+                <td>[0.87615527 0.44628099]</td>
+                <td>[273  58]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 4:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.33911841499001694</td>
+                <td>0.9214501510574018</td>
+                <td>[0.96116505 0.36363636]</td>
+                <td>[0.95498392 0.4       ]</td>
+                <td>[0.95806452 0.38095238]</td>
+                <td>[311  20]</td>
+            </tr>
+        </table>
+    
+    <footer>
+        <p>Contact us at <a href="mailto:ferreira.jr.ufpb@gmail.com">ferreira.jr.ufpb@gmail.com</a></p>
+    </footer>
+    <script>
+        document.getElementById('graph').addEventListener('click', function() {
+            var src = this.src;
+            var overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            overlay.style.cursor = 'zoom-out';
+            overlay.innerHTML = '<img src="' + src + '" style="width: 80%; height: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">';
+            overlay.addEventListener('click', function() {
+                this.parentNode.removeChild(this);
+            });
+            document.body.appendChild(overlay);
+        });
+        var toggleDarkMode = document.getElementById('toggle-dark-mode');
+        toggleDarkMode.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+</body>
+</html>
