@@ -25,7 +25,7 @@ How to use the module for regression problems.
 ## Importing the Library
 First, import the necessary modules from the library:
 
-```py
+```python
 from mlpr.ml.regression import metrics, plots
 from mlpr.ml.tunning.grid_search import GridSearch
 from mlpr.reports.reports import ReportGenerator
@@ -34,7 +34,7 @@ from mlpr.reports.reports import ReportGenerator
 ## Loading the Data
 Load your dataset. In this example, we're using the diabetes dataset from sklearn:
 
-```py
+```python
 import sklearn.datasets as load_diabetes
 content = load_diabetes()
 data = pd.DataFrame(
@@ -47,7 +47,7 @@ data["target"] = content["target"]
 ## Set the seed
 Set the random seed for reproducibility
 
-```py
+```python
 n_seed = 42
 np.random.seed(n_seed)
 ```
@@ -55,14 +55,14 @@ np.random.seed(n_seed)
 ## Preparing the Data
 Split your data into features ($X$) and target ($y$):
 
-```py
+```python
 X = data.drop("target", axis=1)
 y = data["target"].values
 ```
 ## Model Training
 Define the parameters for your models and use `GridSearch` to find the best model:
 
-```py
+```python
 models_params = {
     Ridge: {
         'alpha': [0.1, 1.0, 10.0],
@@ -120,7 +120,7 @@ best_model, best_params = \
 ## Making Predictions
 Use the best model to make predictions:
 
-```py
+```python
 data_test["y_pred"] = \
     grid_search \
         .best_model \
@@ -130,7 +130,7 @@ data_test["y_pred"] = \
 ## Visualizing the Results
 Plot the results using the `RegressionPlots` module:
 
-```py
+```python
 rp = \
     plots \
         .RegressionPlots(
@@ -142,7 +142,7 @@ rp = \
 ## Evaluating the Model
 Calculate various metrics to evaluate the performance of the model:
 
-```py
+```python
 rm = metrics.RegressionMetrics(
     data_test,
     *["y_true", "y_pred"]
