@@ -24,7 +24,6 @@ pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/
 
 The example of how to use the module `mlpr.ml.regression` can be view in [`notebooks/regression/`](/notebooks/regression/) -->
 
-
 # Regression
 
 How to use the module for regression problems.
@@ -75,7 +74,7 @@ Define the parameters for your models and use `GridSearch` to find the best mode
 ```python
 models_params = {
     Ridge: {
-        'alpha': [0.1, 1.0, 10.0],
+        'alpha': [1.0, 10.0, 15, 20],
         'random_state': [n_seed]
     },
     Lasso: {
@@ -93,11 +92,13 @@ models_params = {
     },
     GradientBoostingRegressor: {
         'n_estimators': [100, 200],
-        'learning_rate': [0.1, 0.05, 0.01], 'random_state': [n_seed]
+        'learning_rate': [0.1, 0.05, 0.01],
+        'random_state': [n_seed]
     },
     XGBRegressor: {
         'n_estimators': [100, 200],
-        'learning_rate': [0.1, 0.05, 0.01], 'random_state': [n_seed]
+        'learning_rate': [0.1, 0.05, 0.01],
+        'random_state': [n_seed]
     }
 }
 
@@ -105,10 +106,7 @@ params_split = {
     'test_size': 0.25,
     'random_state': n_seed
 }
-params_norm = {
-    'with_mean': True,
-    'with_std': True
-}
+params_norm = {'with_mean': True, 'with_std': True}
 
 grid_search = GridSearch(
     X,
@@ -118,11 +116,11 @@ grid_search = GridSearch(
     normalize=True,
     params_norm=params_norm
 )
-grid_search.search()
+grid_search.search(cv=5, n_jobs=-1)
 
 best_model, best_params = \
     grid_search \
-        .get_best_model()
+    .get_best_model()
 
 ```
 
@@ -131,22 +129,10 @@ best_model, best_params = \
 Use the best model to make predictions:
 
 ```python
-data_test["y_pred"] = \
+data_train["y_pred"] = \
     grid_search \
         .best_model \
             .predict(grid_search.X_train)
-```
-
-## Visualizing the Results
-Plot the results using the `RegressionPlots` module:
-
-```python
-rp = \
-    plots \
-        .RegressionPlots(
-            data_test,
-            color_palette=["#FF4B3E", "#1C2127"]
-        )
 ```
 
 ## Evaluating the Model
@@ -154,7 +140,7 @@ Calculate various metrics to evaluate the performance of the model:
 
 ```python
 rm = metrics.RegressionMetrics(
-    data_test,
+    data_train,
     *["y_true", "y_pred"]
 )
 results = rm.calculate_metrics(
@@ -220,10 +206,89 @@ The output it's a dictionary object with the calculated metrics, like this:
     'accuracy': 0.8972809667673716}}}}
 ```
 
+
+
+## Visualizing the Results
+Plot the results using the `RegressionPlots` module:
+
+```python
+rp = \
+    plots \
+        .RegressionPlots(
+            data_train,
+            color_palette=["#FF4B3E", "#1C2127"]
+        )
+```
+
+```py
+fig, axs = rp.grid_plot(
+    plot_functions=[
+        ['graph11', 'graph12', 'graph13'],
+        ['graph21', 'graph22', 'graph23'],
+    ],
+    plot_args={
+        'graph11': {
+            "plot": "scatter",
+            "params": {
+                'y_true_col': 'y_true',
+                'y_pred_col': 'y_pred',
+                'linecolor': '#1C2127',
+                'worst_interval': True,
+                'metrics': rm.metrics["calculate_kappa"],
+                'class_interval': rm._class_intervals,
+                'method': 'f1_score',
+                'positive': True
+            }
+        },
+        'graph12': {
+            "plot": "plot_ecdf",
+            "params": {
+                'y_true_col': 'y_true',
+                'y_pred_col': 'y_pred'
+            }
+        },
+        'graph21': {
+            "plot": "plot_kde",
+            "params": {
+                'columns': ['y_true', 'y_pred']
+            }
+        },
+        'graph22': {
+            "plot": "plot_error_hist",
+            "params": {
+                'y_true_col': 'y_true',
+                'y_pred_col': 'y_pred',
+                'linecolor': '#1C2127'
+            }
+        },
+        'graph13': {
+            "plot": "plot_fitted",
+            "params": {
+                'y_true_col': 'y_true',
+                'y_pred_col': 'y_pred',
+                'condition': data_train["y_true"] < 500,
+                'sample_size': 100
+            }
+        },
+        'graph23': {
+            "plot": "plot_fitted",
+            "params": {
+                'y_true_col': 'y_true',
+                'y_pred_col': 'y_pred',
+                'condition': None,
+                'sample_size': None
+            }
+        },
+    },
+    show_inline=True
+)
+```
+![plot](/assets/regression_plots.png)
+
+
 ## Reports
 
 Here you can see the <a href="https://raw.githack.com/Manuelfjr/mlpr/develop/data/05_reports/report_model.html">report</a> output.
-
 
 # Contact
 
