@@ -32,11 +32,16 @@ class RegressionPlots:
     def __search(
         self, metrics_dict: dict = {}, intervals_dict: dict = {}, metric: str = "precision", positive: bool = True
     ):
-        method = {i_class: content["metrics"][metric][int(positive)] for i_class, content in metrics_dict.items()}
+        method = {
+            i_class: content["metrics"][metric][0] if len(
+                content["metrics"][metric]
+                ) == 1 else content["metrics"][metric][int(positive)] 
+            for i_class, content in metrics_dict.items()
+        }
         k_worst_class = min(method, key=method.get)
         return intervals_dict[k_worst_class]
 
-    def __set_vxlines(self, ax: Axes, interval: Tuple[float, float], color: str, linestyle: str) -> Tuple[Figure, Axes]:
+    def __set_vxlines(self, ax: Axes, interval: Tuple[float, float], xy: int=None, color: str='black', linestyle: str='--') -> Tuple[Figure, Axes]:
         if np.isneginf(interval[0]):
             ax.axvline(x=interval[1], color=color, linestyle=linestyle)
         elif np.isposinf(interval[1]):
@@ -44,6 +49,8 @@ class RegressionPlots:
         else:
             ax.axvline(x=interval[0], color=color, linestyle=linestyle)
             ax.axvline(x=interval[1], color=color, linestyle=linestyle)
+        if xy is not None:
+            ax.axvline(x=xy, color=color, linestyle=linestyle)
         return ax
 
     def check_if_inline(self, show_inline: bool):
@@ -65,6 +72,68 @@ class RegressionPlots:
         elif (self.color_palette is not None) and (step == "after"):
             mpl.rcParams["axes.prop_cycle"] = self.original_prop_cycle
         return None
+    
+    def plot_fitted(
+        self,
+        y_true_col: str,
+        y_pred_col: str,
+        condition: pd.Series,
+        seed: int=42,
+        sample_size: Optional[int] = None,
+        ax: Optional[plt.Axes] = None,
+        figsize: Tuple[int, int] = (12, 6),
+        show_inline: bool = False,
+        **kwargs
+    ) -> plt.Axes:
+        """
+        Plot the true and predicted values from the data DataFrame.
+
+        Parameters
+        ----------
+        y_true_col : str
+            The column name of the true values in the data DataFrame.
+        y_pred_col : str
+            The column name of the predicted values in the data DataFrame.
+        condition : pd.Series
+            The condition to filter the data.
+        sample_size : int, optional
+            The number of samples to draw from the data. If None, all data is used. Default is None.
+        ax : matplotlib.axes.Axes, optional
+            The axes upon which to plot. If None, a new figure and axes are created. Default is None.
+        figsize : Tuple[int, int], optional
+            The size of the figure (width, height) in inches. Default is (12, 6).
+        show_inline : bool, optional
+            Whether to display the plot inline in Jupyter Notebook or IPython. Default is False.
+        **kwargs : dict
+            Additional keyword arguments to pass to plt.plot.
+
+        Returns
+        -------
+        ax : matplotlib.axes.Axes
+            The axes on which the data was plotted.
+        """
+        self.check_color_map()
+        fig, ax = self._is_grid(ax, figsize=figsize)
+
+        if condition is not None:
+            filtered_data = self.data[condition].copy()
+        else:
+            filtered_data = self.data.copy()
+
+        if sample_size is not None:
+            filtered_data = filtered_data.sample(sample_size, random_state=seed)
+
+        ax.plot(filtered_data[y_true_col].values, label=y_true_col, **kwargs)
+        ax.plot(filtered_data[y_pred_col].values, label=y_pred_col, **kwargs)
+        ax.legend()
+        ax.grid(True)
+
+        self.check_if_inline(show_inline)
+        self.check_color_map("after")
+
+        fig.tight_layout()
+
+        return ax
 
     def scatter(
         self,
@@ -148,7 +217,8 @@ class RegressionPlots:
 
         if worst_interval:
             interval = self.__search(metrics, class_interval, method, positive)
-            ax = self.__set_vxlines(ax, interval, linecolor_interval, linestyle_interval)
+            xy = p2 if -np.inf in interval else p1 if np.inf in interval else None
+            ax = self.__set_vxlines(ax, interval, xy, linecolor_interval, linestyle_interval)
 
         corr = self.data[y_true_col].corr(self.data[y_pred_col])
 
@@ -343,7 +413,7 @@ class RegressionPlots:
 
     def grid_plot(
         self,
-        plot_functions: List[List[str]] = [["scatter", "plot_ecdf"], ["plot_kde", "plot_error_hist"]],
+        plot_functions: List[List[str]],
         plot_args: Dict[str, Dict[str, Any]] = {},
         figsize: Tuple[int, int] = (18, 12),
         **kwargs: Dict[str, Any],
@@ -384,12 +454,17 @@ class RegressionPlots:
         for i in range(grid_size[0]):
             for j in range(grid_size[1]):
                 if j < len(plot_functions[i]):
-                    func_name = plot_functions[i][j]
-                    func = getattr(self, func_name)
-                    args = {**kwargs, **plot_args.get(func_name, {})}
-                    func(ax=axs[i, j], **args)
+                    graph_name = plot_functions[i][j]
+                    graph_info = plot_args.get(graph_name)
+                    if graph_info:
+                        func_name = graph_info["plot"]
+                        func = getattr(self, func_name)
+                        args = {**kwargs, **graph_info["params"]}
+                        func(ax=axs[i, j], **args)
+                    else:
+                        axs[i, j].axis("off")
                 else:
-                    axs[i, j].axis("off")
+                    axs[i, j].set_visible(False)
 
         self.check_color_map("after")
 

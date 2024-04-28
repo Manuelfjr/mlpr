@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mlpr"
-version = "0.0.23"
+version = "0.0.28"
 authors = ["Manuel Ferreira Junior <ferreira.jr.ufpb@gmail.com>"]
 description = "A library for machine learning pipeline and creation of reports."
 readme = "README.md"

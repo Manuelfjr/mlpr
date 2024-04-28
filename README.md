@@ -1,7 +1,9 @@
 # MLPR Library
+[![TestPyPI version](https://img.shields.io/badge/dynamic/json?url=https://test.pypi.org/pypi/mlpr/json&label=TestPyPI%20version&query=$.info.version&color=blue)](https://test.pypi.org/project/mlpr/)
 
 <!-- <img src="assets/regression_plots.png" alt="Regression Plots" href="assets/regression_plots.png"> -->
-<a href="https://ibb.co/dp1TxTq"><img src="https://i.ibb.co/s1kfzfG/regression-plots.png" alt="regression-plots" border="0"></a>
+<!-- <a href="https://ibb.co/dp1TxTq"><img src="https://i.ibb.co/s1kfzfG/regression-plots.png" alt="regression-plots" border="0"></a> -->
+<a href="https://ibb.co/GQzjQTF"><img src="https://i.ibb.co/fdj7dvQ/regression-plots.png" alt="regression-plots" border="0"></a>
 
 This repository is a developing library named `MLPR` (Machine Learning Pipeline Report). It aims to facilitate the creation of machine learning models in various areas such as regression, forecasting, classification, and clustering. The library allows the user to perform tuning of these models, generate various types of plots for post-modeling analysis, and calculate various metrics.
 
