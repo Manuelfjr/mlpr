@@ -82,21 +82,27 @@
     <div style="display: flex; flex-direction: column; align-items: center; margin-top: 2em;">
         <h1 class="header" style="text-align: center;">Regression Metrics Report</h1>
         <div class="header" style="display: flex; justify-content: center; align-items: center; text-align: center;">
-
+            
                 <img src="/home/manuel/Documents/projects/libs/mlpr/data/02_intermediate/regression_plots.png" alt="Graph" id="graph" style="max-width: 30%; cursor: zoom-in;"> <!-- Set left margin to 0 -->
-
+            
         </div>
     </div>
 
-    <h2>MAPE: 39.594540526956436</h2>
-    <h2>RMSE: 54.09419440169204</h2>
-    <h2>Kolmogorov-Smirnov: (0.1510574018126888, 0.0010310446878578096)</h2>
+    <h2>MAPE: 43.43105144697499</h2>
+    <h2>RMSE: 19.87870623664434</h2>
+    <h2>Kolmogorov-Smirnov: (0.03625377643504532, 0.9817907314065071)</h2>
 
     <h2>Confusion Matrix:</h2>
-    <pre>[[54 57  2  0]
- [16 70 21  0]
- [ 0 37 37  3]
- [ 0  6 25  3]]</pre>
+    <pre>[[ 2  0  0  0  0  0  0  0  0  0]
+ [ 0  3  2  0  0  0  0  0  0  0]
+ [ 0  1  9  2  0  0  0  0  0  0]
+ [ 0  0  2 27  7  0  0  0  0  0]
+ [ 0  0  0  5 44  8  0  0  0  0]
+ [ 0  0  0  0  3 60  7  0  0  0]
+ [ 0  0  0  0  0  8 66  2  0  0]
+ [ 0  0  0  0  0  0 11 35  4  0]
+ [ 0  0  0  0  0  0  0  3 11  1]
+ [ 0  0  0  0  0  0  0  0  0  8]]</pre>
 
     <h2>Confusion Matrix Metrics:</h2>
     <table>
@@ -108,16 +114,19 @@
             <th>Accuracy</th>
         </tr>
         <tr>
-            <td>[0.77142857 0.41176471 0.43529412 0.5       ]</td>
-            <td>[0.47787611 0.65420561 0.48051948 0.08823529]</td>
-            <td>[0.59016393 0.50541516 0.45679012 0.15      ]</td>
-            <td>[113 107  77  34]</td>
-            <td>0.4954682779456193</td>
+            <td>[1.         0.75       0.69230769 0.79411765 0.81481481 0.78947368
+ 0.78571429 0.875      0.73333333 0.88888889]</td>
+            <td>[1.         0.6        0.75       0.75       0.77192982 0.85714286
+ 0.86842105 0.7        0.73333333 1.        ]</td>
+            <td>[1.         0.66666667 0.72       0.77142857 0.79279279 0.82191781
+ 0.825      0.77777778 0.73333333 0.94117647]</td>
+            <td>[ 2  5 12 36 57 70 76 50 15  8]</td>
+            <td>0.8006042296072508</td>
         </tr>
     </table>
 
     <h2>Kappa Scores:</h2>
-
+    
         <h3>Kappa Score for 0:</h3>
         <table>
             <tr>
@@ -129,15 +138,15 @@
                 <th>Support</th>
             </tr>
             <tr>
-                <td>0.4452885840055415</td>
-                <td>0.7734138972809668</td>
-                <td>[0.77394636 0.77142857]</td>
-                <td>[0.9266055  0.47787611]</td>
-                <td>[0.8434238  0.59016393]</td>
-                <td>[218 113]</td>
+                <td>1.0</td>
+                <td>1.0</td>
+                <td>[1. 1.]</td>
+                <td>[1. 1.]</td>
+                <td>[1. 1.]</td>
+                <td>[329   2]</td>
             </tr>
         </table>
-
+    
         <h3>Kappa Score for 1:</h3>
         <table>
             <tr>
@@ -149,15 +158,15 @@
                 <th>Support</th>
             </tr>
             <tr>
-                <td>0.180085703437178</td>
-                <td>0.5861027190332326</td>
-                <td>[0.77018634 0.41176471]</td>
-                <td>[0.55357143 0.65420561]</td>
-                <td>[0.64415584 0.50541516]</td>
-                <td>[224 107]</td>
+                <td>0.6621299761823749</td>
+                <td>0.9909365558912386</td>
+                <td>[0.99388379 0.75      ]</td>
+                <td>[0.99693252 0.6       ]</td>
+                <td>[0.99540582 0.66666667]</td>
+                <td>[326   5]</td>
             </tr>
         </table>
-
+    
         <h3>Kappa Score for 2:</h3>
         <table>
             <tr>
@@ -169,15 +178,15 @@
                 <th>Support</th>
             </tr>
             <tr>
-                <td>0.2813579394059016</td>
-                <td>0.7341389728096677</td>
-                <td>[0.83739837 0.43529412]</td>
-                <td>[0.81102362 0.48051948]</td>
-                <td>[0.824      0.45679012]</td>
-                <td>[254  77]</td>
+                <td>0.7090292603290218</td>
+                <td>0.9788519637462235</td>
+                <td>[0.99056604 0.69230769]</td>
+                <td>[0.98746082 0.75      ]</td>
+                <td>[0.98901099 0.72      ]</td>
+                <td>[319  12]</td>
             </tr>
         </table>
-
+    
         <h3>Kappa Score for 3:</h3>
         <table>
             <tr>
@@ -189,15 +198,135 @@
                 <th>Support</th>
             </tr>
             <tr>
-                <td>0.12297381546134645</td>
-                <td>0.8972809667673716</td>
-                <td>[0.90461538 0.5       ]</td>
-                <td>[0.98989899 0.08823529]</td>
-                <td>[0.94533762 0.15      ]</td>
-                <td>[297  34]</td>
+                <td>0.7444262136859376</td>
+                <td>0.9516616314199395</td>
+                <td>[0.96969697 0.79411765]</td>
+                <td>[0.97627119 0.75      ]</td>
+                <td>[0.97297297 0.77142857]</td>
+                <td>[295  36]</td>
             </tr>
         </table>
-
+    
+        <h3>Kappa Score for 4:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.751087134216119</td>
+                <td>0.9305135951661632</td>
+                <td>[0.95306859 0.81481481]</td>
+                <td>[0.96350365 0.77192982]</td>
+                <td>[0.95825771 0.79279279]</td>
+                <td>[274  57]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 5:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.7716393355622777</td>
+                <td>0.9214501510574018</td>
+                <td>[0.96078431 0.78947368]</td>
+                <td>[0.93869732 0.85714286]</td>
+                <td>[0.9496124  0.82191781]</td>
+                <td>[261  70]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 6:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.769406847133758</td>
+                <td>0.9154078549848943</td>
+                <td>[0.95951417 0.78571429]</td>
+                <td>[0.92941176 0.86842105]</td>
+                <td>[0.94422311 0.825     ]</td>
+                <td>[255  76]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 7:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.7433113609926327</td>
+                <td>0.9395770392749244</td>
+                <td>[0.94845361 0.875     ]</td>
+                <td>[0.98220641 0.7       ]</td>
+                <td>[0.96503497 0.77777778]</td>
+                <td>[281  50]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 8:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.7206751054852321</td>
+                <td>0.9758308157099698</td>
+                <td>[0.98734177 0.73333333]</td>
+                <td>[0.98734177 0.73333333]</td>
+                <td>[0.98734177 0.73333333]</td>
+                <td>[316  15]</td>
+            </tr>
+        </table>
+    
+        <h3>Kappa Score for 9:</h3>
+        <table>
+            <tr>
+                <th>Score</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1 Score</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td>0.9396315885464162</td>
+                <td>0.9969788519637462</td>
+                <td>[1.         0.88888889]</td>
+                <td>[0.99690402 1.        ]</td>
+                <td>[0.99844961 0.94117647]</td>
+                <td>[323   8]</td>
+            </tr>
+        </table>
+    
     <footer>
         <p>Contact us at <a href="mailto:ferreira.jr.ufpb@gmail.com">ferreira.jr.ufpb@gmail.com</a></p>
     </footer>

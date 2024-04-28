@@ -111,10 +111,10 @@ class GridSearch:
         """
         return self.best_model, self.best_params
 
-    def search(self):
+    def search(self, **kwargs):
         """
         Perform grid search for each model.
         """
         for model, params in self.models_params.items():
-            self.evaluate_model(model, params)
+            self.evaluate_model(model, params, **kwargs)
         return self

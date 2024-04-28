@@ -29,6 +29,21 @@ class RegressionPlots:
         if self.color_palette is not None:
             mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=self.color_palette)
 
+    def __search(self, metrics_dict: dict={}, intervals_dict: dict={}, metric: str="precision", positive: bool=True):
+        method = {i_class: content["metrics"][metric][int(positive)] for i_class, content in metrics_dict.items()}
+        k_worst_class = min(method, key=method.get)
+        return intervals_dict[k_worst_class]
+
+    def __set_vxlines(self, ax: Axes, interval: Tuple[float, float], color: str, linestyle: str) -> Tuple[Figure, Axes]:
+        if np.isneginf(interval[0]):
+            ax.axvline(x=interval[1], color=color, linestyle=linestyle)
+        elif np.isposinf(interval[1]):
+            ax.axvline(x=interval[0], color=color, linestyle=linestyle)
+        else:
+            ax.axvline(x=interval[0], color=color, linestyle=linestyle)
+            ax.axvline(x=interval[1], color=color, linestyle=linestyle)
+        return ax
+
     def check_if_inline(self, show_inline: bool):
         if not show_inline:
             plt.close()
@@ -61,6 +76,13 @@ class RegressionPlots:
         show_inline: bool = False,
         corr_pos_x: float = 0.05,
         corr_pos_y: float = 0.95,
+        worst_interval: bool = False,
+        linestyle_interval: str = "--",
+        linecolor_interval: str = "black",
+        metrics: dict = {},
+        class_interval: dict = {},
+        method: str="precision",
+        positive: bool=True,
         **kwargs: Dict[str, Any],
     ) -> Tuple[Figure, Axes]:
         """
@@ -88,6 +110,20 @@ class RegressionPlots:
             The x position of the correlation text in the plot. Default is 0.05.
         corr_pos_y : float, optional
             The y position of the correlation text in the plot. Default is 0.95.
+        worst_interval : bool, optional
+            If True, plot the worst interval. Default is False.
+        linestyle_interval : str, optional
+            The line style for the worst interval. Default is "--".
+        linecolor_interval : str, optional
+            The line color for the worst interval. Default is "black".
+        metrics : dict, optional
+            A dictionary of metrics.
+        class_interval : dict, optional
+            A dictionary of class intervals.
+        method : str, optional
+            The method used to calculate the worst interval. Default is "precision".
+        positive : bool, optional
+            If True, calculate the worst interval for positive class. Default is True.
         **kwargs : dict
             Additional keyword arguments to pass to `ax.scatter`.
 
@@ -98,6 +134,7 @@ class RegressionPlots:
         ax : matplotlib.axes.Axes
             The axes containing the scatter plot.
         """
+
         p1 = max(max(self.data[y_true_col]), max(self.data[y_pred_col]))
         p2 = min(min(self.data[y_true_col]), min(self.data[y_pred_col]))
 
@@ -107,10 +144,12 @@ class RegressionPlots:
         ax.scatter(self.data[y_true_col], self.data[y_pred_col], label=label, **kwargs)
         ax.plot([p1, p2], [p1, p2], linestyle, color=linecolor)
 
-        # Calculate the correlation
+        if worst_interval:
+            interval = self.__search(metrics, class_interval, method, positive)
+            ax = self.__set_vxlines(ax, interval, linecolor_interval, linestyle_interval)
+
         corr = self.data[y_true_col].corr(self.data[y_pred_col])
 
-        # Add the correlation to the plot
         ax.text(corr_pos_x, corr_pos_y, f"Correlation: {corr:.2f}", transform=ax.transAxes, verticalalignment="top")
 
         ax.set_xlabel(y_true_col)
@@ -335,7 +374,6 @@ class RegressionPlots:
 
         self.check_color_map()
 
-        # Ensure axs is always a 2D array
         if grid_size[0] == 1 and grid_size[1] == 1:
             axs = np.array([[axs]])
         elif grid_size[0] == 1 or grid_size[1] == 1:
@@ -349,7 +387,6 @@ class RegressionPlots:
                     args = {**kwargs, **plot_args.get(func_name, {})}
                     func(ax=axs[i, j], **args)
                 else:
-                    # If there is no corresponding plot function, hide the axis
                     axs[i, j].axis("off")
 
         self.check_color_map("after")
