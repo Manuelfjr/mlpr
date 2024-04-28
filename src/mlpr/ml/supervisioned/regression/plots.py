@@ -216,9 +216,9 @@ class RegressionPlots:
         ax.plot([p1, p2], [p1, p2], linestyle, color=linecolor)
 
         if worst_interval:
-            interval = self.__search(metrics, class_interval, method, positive)
-            xy = p2 if -np.inf in interval else p1 if np.inf in interval else None
-            ax = self.__set_vxlines(ax, interval, xy, linecolor_interval, linestyle_interval)
+            self._worst_interval = self.__search(metrics, class_interval, method, positive)
+            xy = p2 if -np.inf in self._worst_interval else p1 if np.inf in self._worst_interval else None
+            ax = self.__set_vxlines(ax, self._worst_interval, xy, linecolor_interval, linestyle_interval)
 
         corr = self.data[y_true_col].corr(self.data[y_pred_col])
 

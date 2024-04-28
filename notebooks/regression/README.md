@@ -215,7 +215,7 @@ fig, axs = rp.grid_plot(
                 'worst_interval': True,
                 'metrics': rm.metrics["calculate_kappa"],
                 'class_interval': rm._class_intervals,
-                'method': 'recall',
+                'method': 'f1_score',
                 'positive': True
             }
         },
