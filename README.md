@@ -15,7 +15,7 @@ Before you start, make sure you have installed the MLPR library. You can do this
 
 
 ```bash
-pip install -i https://test.pypi.org/simple/ mlpr
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple mlpr
 ```
 
 <!-- # Regression
