@@ -2,7 +2,7 @@ from typing import Any, Dict, Tuple
 
 import numpy as np
 from sklearn.base import BaseEstimator
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, get_scorer
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -16,6 +16,7 @@ class GridSearch:
         params_split: dict = {},
         normalize: bool = True,
         params_norm: dict = {},
+        scoring: str = 'neg_mean_squared_error'
     ):
         """
         Initialize GridSearch object.
@@ -28,12 +29,14 @@ class GridSearch:
             Target vector.
         models_params : dict
             Dictionary with models and parameters to search.
-        test_size : float, default=0.2
-            Test set size.
-        random_state : int, default=None
-            Random state for train-test split.
+        params_split : dict, default={}
+            Parameters for train-test split. Could include 'test_size', 'random_state', etc.
         normalize : bool, default=True
             Whether to normalize the data.
+        params_norm : dict, default={}
+            Parameters for the normalization process.
+        scoring : str, default='neg_mean_squared_error'
+            Scoring metric to evaluate the models. Must be a valid scoring metric for sklearn's GridSearchCV.
         """
         self.X_train, self.X_test, self.y_train, self.y_test = self.split_data(X, y, **params_split)
         self.models_params = models_params
@@ -44,7 +47,8 @@ class GridSearch:
         self.best_score_ = None
         self.best_model = None
         self.best_params = None
-        self.lowest_rmse = np.inf
+        self.scoring = scoring
+        self.best_score_ = np.inf if get_scorer(scoring)._sign == 1 else -np.inf
 
     def split_data(
         self, X: np.ndarray, y: np.ndarray, **kwargs
@@ -86,17 +90,19 @@ class GridSearch:
         params : dict
             Parameters to search.
         """
-        grid = GridSearchCV(model(), params, **kwargs)
+        grid = GridSearchCV(model(), params, scoring=self.scoring, **kwargs)
         grid.fit(self.X_train, self.y_train)
 
-        y_pred = grid.predict(self.X_test)
-        rmse = np.sqrt(mean_squared_error(self.y_test, y_pred))
+        if self.scoring == 'neg_mean_squared_error':
+            y_pred = grid.predict(self.X_test)
+            score = np.sqrt(mean_squared_error(self.y_test, y_pred))
+        else:
+            score = grid.best_score_
 
-        if rmse < self.lowest_rmse:
-            self.lowest_rmse = rmse
+        if (get_scorer(self.scoring)._sign == 1 and score < self.best_score_) or (get_scorer(self.scoring)._sign == -1 and score > self.best_score_):
+            self.best_score_ = score
             self.best_model = grid.best_estimator_  # store the trained model
             self.best_params = grid.best_params_
-            self.best_score_ = grid.best_score_
 
         return self
 

@@ -265,7 +265,7 @@ fig, axs = rp.grid_plot(
 )
 ```
 
-<a href="https://ibb.co/fHwtHNm"><img src="https://i.ibb.co/7KmVKp7/regression-plots.png" alt="regression-plots" border="0"></a>
+<a href="https://ibb.co/3pqSmnZ"><img src="https://i.ibb.co/Jv4rj9J/regression-plots.png" alt="regression-plots" border="0"></a>
 
 
 ## Reports
