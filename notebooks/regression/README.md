@@ -109,18 +109,6 @@ data_train["y_pred"] = \
             .predict(grid_search.X_train)
 ```
 
-## Visualizing the Results
-Plot the results using the `RegressionPlots` module:
-
-```python
-rp = \
-    plots \
-        .RegressionPlots(
-            data_train,
-            color_palette=["#FF4B3E", "#1C2127"]
-        )
-```
-
 ## Evaluating the Model
 Calculate various metrics to evaluate the performance of the model:
 
@@ -193,13 +181,20 @@ The output it's a dictionary object with the calculated metrics, like this:
 ```
 
 
-## Plots
+
+## Visualizing the Results
+Plot the results using the `RegressionPlots` module:
+
+```python
+rp = \
+    plots \
+        .RegressionPlots(
+            data_train,
+            color_palette=["#FF4B3E", "#1C2127"]
+        )
+```
 
 ```py
-rp = RegressionPlots(
-    data_train,
-    color_palette=["#FF4B3E", "#1C2127"]
-)
 fig, axs = rp.grid_plot(
     plot_functions=[
         ['graph11', 'graph12', 'graph13'],
@@ -263,6 +258,7 @@ fig, axs = rp.grid_plot(
 )
 ```
 ![plot](/assets/regression_plots.png)
+
 
 ## Reports
 
