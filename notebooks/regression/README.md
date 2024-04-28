@@ -1,3 +1,4 @@
+
 # Regression
 
 How to use the module for regression problems.
@@ -9,22 +10,27 @@ First, import the necessary modules from the library:
 from mlpr.ml.regression import metrics, plots
 from mlpr.ml.tunning.grid_search import GridSearch
 from mlpr.reports.reports import ReportGenerator
-
-# for experiment, we will use the diabetes
-# dataset from scikit-learn
-import sklearn.datasets as load_diabetes
 ```
 
 ## Loading the Data
-Load your dataset. In this example, we're using the diabetes dataset from sklearn:
+Load your dataset. In this example, we're generating a dataset for regression using sklearn:
 
 ```python
-content = load_diabetes()
-data = pd.DataFrame(
-    content["data"],
-    columns=content["feature_names"]
-)
-data["target"] = content["target"]
+n_feats = 11
+n_instances = 1000
+n_invert = 50
+n_noise = 20
+```
+
+```python
+X, y = make_regression(n_samples=n_instances, n_features=n_feats, noise=n_noise)
+
+# introduce of noises
+indices = np.random.choice(y.shape[0], size=n_invert, replace=False)
+y[indices] = np.max(y) - y[indices]
+
+data = pd.DataFrame(data=X, columns=[f'feature_{i}' for i in range(1, n_feats + 1)])
+data['target'] = y
 ```
 
 ## Set the seed
@@ -198,7 +204,8 @@ rp = \
 fig, axs = rp.grid_plot(
     plot_functions=[
         ['graph11', 'graph12', 'graph13'],
-        ['graph21', 'graph22', 'graph23'],
+        ['graph21', 'graph22'],
+        ['graph23']
     ],
     plot_args={
         'graph11': {
@@ -210,7 +217,7 @@ fig, axs = rp.grid_plot(
                 'worst_interval': True,
                 'metrics': rm.metrics["calculate_kappa"],
                 'class_interval': rm._class_intervals,
-                'method': 'f1_score',
+                'method': 'recall',
                 'positive': True
             }
         },
@@ -240,8 +247,8 @@ fig, axs = rp.grid_plot(
             "params": {
                 'y_true_col': 'y_true',
                 'y_pred_col': 'y_pred',
-                'condition': data_train["y_true"] < 500,
-                'sample_size': 100
+                'condition': (data_train["y_true"] >= 424.5132071505618),
+                'sample_size': None
             }
         },
         'graph23': {
@@ -257,7 +264,8 @@ fig, axs = rp.grid_plot(
     show_inline=True
 )
 ```
-![plot](/assets/regression_plots.png)
+
+<a href="https://ibb.co/fHwtHNm"><img src="https://i.ibb.co/7KmVKp7/regression-plots.png" alt="regression-plots" border="0"></a>
 
 
 ## Reports
