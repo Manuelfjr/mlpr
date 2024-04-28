@@ -29,7 +29,9 @@ class RegressionPlots:
         if self.color_palette is not None:
             mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=self.color_palette)
 
-    def __search(self, metrics_dict: dict={}, intervals_dict: dict={}, metric: str="precision", positive: bool=True):
+    def __search(
+        self, metrics_dict: dict = {}, intervals_dict: dict = {}, metric: str = "precision", positive: bool = True
+    ):
         method = {i_class: content["metrics"][metric][int(positive)] for i_class, content in metrics_dict.items()}
         k_worst_class = min(method, key=method.get)
         return intervals_dict[k_worst_class]
@@ -81,8 +83,8 @@ class RegressionPlots:
         linecolor_interval: str = "black",
         metrics: dict = {},
         class_interval: dict = {},
-        method: str="precision",
-        positive: bool=True,
+        method: str = "precision",
+        positive: bool = True,
         **kwargs: Dict[str, Any],
     ) -> Tuple[Figure, Axes]:
         """
