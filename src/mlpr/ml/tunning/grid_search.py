@@ -6,7 +6,6 @@ from sklearn.metrics import mean_squared_error, get_scorer
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.preprocessing import StandardScaler
 
-
 class GridSearch:
     def __init__(
         self,
