@@ -16,7 +16,7 @@ class GridSearch:
         normalize: bool = True,
         params_norm: dict = {},
         scoring: str = 'neg_mean_squared_error'
-    ):
+    ) -> None:
         """
         Initialize GridSearch object.
 
@@ -38,7 +38,7 @@ class GridSearch:
             Scoring metric to evaluate the models. Must be a valid scoring metric for sklearn's GridSearchCV.
         """
         self.X_train, self.X_test, self.y_train, self.y_test = self.split_data(X, y, **params_split)
-        self.models_params = models_params
+        self.models_params: Dict[BaseEstimator, Dict[str, Any]] = models_params
 
         if normalize:
             self.normalize_data(**params_norm)
@@ -46,8 +46,8 @@ class GridSearch:
         self.best_score_ = None
         self.best_model = None
         self.best_params = None
-        self.scoring = scoring
-        self.best_score_ = np.inf if get_scorer(scoring)._sign == 1 else -np.inf
+        self.scoring: str = scoring
+        self.best_score_: float = np.inf if get_scorer(scoring)._sign == 1 else -np.inf
 
     def split_data(
         self, X: np.ndarray, y: np.ndarray, **kwargs
@@ -74,8 +74,8 @@ class GridSearch:
         Normalize the data.
         """
         scaler = StandardScaler(**kwargs)
-        self.X_train = scaler.fit_transform(self.X_train)
-        self.X_test = scaler.transform(self.X_test)
+        self.X_train: np.ndarray = scaler.fit_transform(self.X_train)
+        self.X_test: np.ndarray = scaler.transform(self.X_test)
         return self
 
     def evaluate_model(self, model: BaseEstimator, params: Dict[str, Any], **kwargs):
@@ -93,15 +93,15 @@ class GridSearch:
         grid.fit(self.X_train, self.y_train)
 
         if self.scoring == 'neg_mean_squared_error':
-            y_pred = grid.predict(self.X_test)
-            score = np.sqrt(mean_squared_error(self.y_test, y_pred))
+            y_pred: np.ndarray = grid.predict(self.X_test)
+            score: np.ndarray[Any, np.dtype[Any]] = np.sqrt(mean_squared_error(self.y_test, y_pred))
         else:
             score = grid.best_score_
 
         if (get_scorer(self.scoring)._sign == 1 and score < self.best_score_) or (get_scorer(self.scoring)._sign == -1 and score > self.best_score_):
             self.best_score_ = score
-            self.best_model = grid.best_estimator_  # store the trained model
-            self.best_params = grid.best_params_
+            self.best_model: Any = grid.best_estimator_  # store the trained model
+            self.best_params: dict = grid.best_params_
 
         return self
 

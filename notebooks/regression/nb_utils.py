@@ -27,8 +27,8 @@ def set_root(level: int = 1) -> Path:
     """
     for i in range(level):
         if i == 0:
-            PROJECT_DIR = Path(__file__).parent
+            PROJECT_DIR: Path = Path(__file__).parent
         else:
-            PROJECT_DIR = PROJECT_DIR.parent
+            PROJECT_DIR: Path = PROJECT_DIR.parent
     sys.path.append(str(PROJECT_DIR))
     return PROJECT_DIR

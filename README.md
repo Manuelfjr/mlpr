@@ -144,6 +144,10 @@ data_train["y_pred"] = \
 Calculate various metrics to evaluate the performance of the model:
 
 ```python
+k = 3
+```
+
+```python
 rm = metrics.RegressionMetrics(
     data_train,
     *["y_true", "y_pred"]
