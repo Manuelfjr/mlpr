@@ -1,4 +1,3 @@
-
 # Regression
 
 How to use the module for regression problems.
@@ -7,9 +6,9 @@ How to use the module for regression problems.
 First, import the necessary modules from the library:
 
 ```python
-from mlpr.ml.regression import metrics, plots
+from mlpr.ml.supervisioned.regression import metrics, plots
 from mlpr.ml.tunning.grid_search import GridSearch
-from mlpr.reports.reports import ReportGenerator
+from mlpr.reports.create import ReportGenerator
 ```
 
 ## Loading the Data
@@ -117,6 +116,10 @@ data_train["y_pred"] = \
 
 ## Evaluating the Model
 Calculate various metrics to evaluate the performance of the model:
+
+```python
+k = 3
+```
 
 ```python
 rm = metrics.RegressionMetrics(
@@ -247,7 +250,13 @@ fig, axs = rp.grid_plot(
             "params": {
                 'y_true_col': 'y_true',
                 'y_pred_col': 'y_pred',
-                'condition': (data_train["y_true"] >= 424.5132071505618),
+                'condition': (
+                    (
+                        rm._worst_interval_kappa[0] <= data_train["y_true"]
+                    ) & (
+                        data_train["y_true"] <= rm._worst_interval_kappa[1]
+                    )
+                ),
                 'sample_size': None
             }
         },
