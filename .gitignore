@@ -5,6 +5,7 @@ __pycache__/
 !test/
 main_*.py
 .pylintrc
+*.vscode
 
 # C extensions
 *.so
