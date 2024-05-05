@@ -1,8 +1,12 @@
-from typing import Dict, List, Union
+"""
+This module provides a class for evaluating regression models and calculating various metrics.
+"""
+
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
-from pyspark.sql import DataFrame, Column
+from pyspark.sql import Column, DataFrame
 from pyspark.sql import functions as F
 from scipy.stats import ks_2samp
 from sklearn.metrics import (
@@ -15,6 +19,7 @@ from sklearn.metrics import (
 from sklearn.preprocessing import KBinsDiscretizer
 
 
+# pylint: disable=too-many-instance-attributes
 class RegressionMetrics:
     """
     A class for evaluating regression models.
@@ -36,22 +41,47 @@ class RegressionMetrics:
         The predicted target values.
     """
 
-    def __init__(self, data: Union[pd.DataFrame, DataFrame], target_col: str = "y_true", preds_col: str = "y_pred") -> None:
+    def __init__(
+        self, data: Union[pd.DataFrame, DataFrame], target_col: str = "y_true", preds_col: str = "y_pred"
+    ) -> None:
         self.data: pd.DataFrame | DataFrame = data
         self.target_col: str = target_col
         self.preds_col: str = preds_col
         self.y_true: pd.Series | Column = self.data[self.target_col]
-        self.y_pred: pd.Series | Column= self.data[self.preds_col]
+        self.y_pred: pd.Series | Column = self.data[self.preds_col]
+        self.cm = None
+        self.metrics = None
+        self._worst_interval_cm = None
+        self._worst_interval_kappa = None
+        self._metrics_cm = None
+        self._class_intervals = None
 
-    def __search(self, metrics_dict: dict = {}, intervals_dict: dict = {}, metric: str = "precision", minimize: Union[int, bool] = 1, use: str = "kappa"):
+    def __search(
+        self,
+        metrics_dict: dict = None,
+        intervals_dict: dict = None,
+        metric: str = "precision",
+        minimize: Union[int, bool] = 1,
+        use: str = "kappa",
+    ):
+        if metrics_dict is None:
+            metrics_dict = {}
+        if intervals_dict is None:
+            intervals_dict = {}
         if use == "kappa":
             method: dict = {
-                i_class: content["metrics"][metric][0] if len(content["metrics"][metric]) == 1 else content["metrics"][metric][int(minimize)]
+                i_class: (
+                    content["metrics"][metric][0]
+                    if len(content["metrics"][metric]) == 1
+                    else content["metrics"][metric][int(minimize)]
+                )
                 for i_class, content in metrics_dict.items()
             }
             worst_class: int | str = min(method, key=method.get)
         elif use == "confusion_matrix":
-            worst_class: int | str = np.where(metrics_dict["metrics"][metric] == np.min(metrics_dict["metrics"][metric]))[0][0]
+            worst_class: int | str = np.where(
+                metrics_dict["metrics"][metric] == np.min(metrics_dict["metrics"][metric])
+            )[0][0]
         return intervals_dict[worst_class]
 
     def _discretize_data(
@@ -308,7 +338,7 @@ class RegressionMetrics:
         strategy: str = "uniform",
         metric: str = "precision",
         minimize: Union[int, bool] = True,
-        **kwargs
+        **kwargs,
     ) -> dict:
         """
         Get the confusion matrix and metrics for each class after discretizing the true and predicted values into bins.
@@ -338,7 +368,7 @@ class RegressionMetrics:
             self.data, n_bins=n_bins, encode=encode, strategy=strategy, **kwargs
         )
         kappa: float = cohen_kappa_score(true_bins, pred_bins)
-        
+
         self._get_interval_class(n_bins, discretizer.bin_edges_[0])
         self.cm: np.ndarray = confusion_matrix(true_bins, pred_bins)
         self._metrics_cm: dict = self._get_metrics_cm(true_bins, pred_bins)
@@ -348,22 +378,18 @@ class RegressionMetrics:
             "metrics": self._metrics_cm,
         }
         self._worst_interval_cm: tuple = self.__search(
-            results,
-            self._class_intervals,
-            metric=metric,
-            minimize=minimize,
-            use="confusion_matrix"
+            results, self._class_intervals, metric=metric, minimize=minimize, use="confusion_matrix"
         )
         return self.cm, self._metrics_cm
 
-    def calculate_kappa(
+    def calculate_kappa(  # pylint: disable=too-many-locals
         self,
         n_bins: int,
         encode: str = "ordinal",
         strategy: str = "uniform",
         metric: str = "precision",
         minimize: Union[int, bool] = True,
-        **kwargs
+        **kwargs,
     ) -> dict:
         """
         Calculate a binary confusion matrix and Cohen's Kappa for each class.
@@ -392,9 +418,7 @@ class RegressionMetrics:
         true_bins, pred_bins, discretizer = self._discretize_data(
             self.data, n_bins=n_bins, encode=encode, strategy=strategy, **kwargs
         )
-        self._get_interval_class(
-            n_bins, discretizer.bin_edges_[0]
-        )
+        self._get_interval_class(n_bins, discretizer.bin_edges_[0])
 
         binary_cms_and_kappas: dict = {}
         for i in range(n_bins):
@@ -407,10 +431,12 @@ class RegressionMetrics:
                 "kappa_score": kappa,
                 "metrics": self._get_metrics_cm(true_bins_binary, pred_bins_binary),
             }
-        self._worst_interval_kappa: tuple[int | float, int | float] = self.__search(binary_cms_and_kappas, self._class_intervals, metric=metric, minimize=minimize)
+        self._worst_interval_kappa: tuple[int | float, int | float] = self.__search(
+            binary_cms_and_kappas, self._class_intervals, metric=metric, minimize=minimize
+        )
         return binary_cms_and_kappas
 
-    def calculate_metrics(self, metrics_list: list = [], metrics_params: dict = {}, **kwargs) -> dict:
+    def calculate_metrics(self, metrics_list: list = None, metrics_params: dict = None, **kwargs) -> dict:
         """
         Calculates the metrics specified in the "metrics_list" parameter.
 
@@ -429,6 +455,11 @@ class RegressionMetrics:
             A dictionary containing the calculated metrics, where the keys are the metric function names
             and the values are the calculated metric values.
         """
+        if metrics_list is None:
+            metrics_list = []
+        if metrics_params is None:
+            metrics_params = {}
+
         self.metrics: dict = {}
         for func_name in metrics_list:
             func: any = getattr(self, func_name)
@@ -441,7 +472,7 @@ class RegressionMetrics:
         predictions: DataFrame,
         labelCol: str = "label",
         predictionCol: str = "prediction",
-        metrics: List[str] = ["mse", "rmse", "r2", "mae"],
+        metrics: Optional[List[str]] = None,
         **kwargs,
     ) -> Dict[str, float]:
         """
@@ -465,6 +496,10 @@ class RegressionMetrics:
         dict
             A dictionary where the keys are the metric names and the values are the calculated metric values.
         """
+        if metrics is None:
+            metrics = ["mse", "rmse", "r2", "mae"]
+
+        # pylint: disable=import-outside-toplevel
         from pyspark.ml.evaluation import RegressionEvaluator
 
         results: dict = {}

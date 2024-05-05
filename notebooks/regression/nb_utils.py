@@ -1,3 +1,7 @@
+"""
+This module provides utility functions for the regression notebooks.
+"""
+
 import sys
 from pathlib import Path
 

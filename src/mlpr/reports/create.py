@@ -1,9 +1,17 @@
+"""
+This module provides a ReportGenerator class for creating reports using templates and metrics.
+"""
+
 from typing import Any, Dict, Optional
 
 from jinja2 import Environment, FileSystemLoader
 
 
-class ReportGenerator:
+class ReportGenerator:  # pylint: disable=too-few-public-methods
+    """
+    A class used to generate reports based on templates.
+    """
+
     def __init__(self, template_dir: str) -> None:
         """
         Initialize the ReportGenerator.
@@ -36,8 +44,8 @@ class ReportGenerator:
 
         report = template.render(metrics=metrics, image_path=image_path)
         try:
-            with open(output_file, "w") as f:
+            with open(output_file, "w", encoding="utf-8") as f:
                 f.write(report)
             return "Report created successfully."
-        except Exception as e:
+        except FileNotFoundError as e:
             return f"Failed to create report. Error: {str(e)}"

@@ -1,24 +1,33 @@
+"""
+Module for performing grid search on machine learning models.
+"""
+
 from typing import Any, Dict, Tuple
 
 import numpy as np
 from sklearn.base import BaseEstimator
-from sklearn.metrics import mean_squared_error, get_scorer
+from sklearn.metrics import get_scorer, mean_squared_error
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.preprocessing import StandardScaler
 
-class GridSearch:
+
+class GridSearch:  # pylint: disable=too-many-instance-attributes
+    """
+    Class for performing grid search on machine learning models.
+    """
+
     def __init__(
         self,
         X: np.ndarray,
         y: np.ndarray,
         models_params: Dict[BaseEstimator, Dict[str, Any]],
-        params_split: dict = {},
+        params_split: dict = None,
         normalize: bool = True,
-        params_norm: dict = {},
-        scoring: str = 'neg_mean_squared_error'
+        params_norm: dict = None,
+        scoring: str = "neg_mean_squared_error",
     ) -> None:
         """
-        Initialize GridSearch object.
+        Initialize the GridSearch object.
 
         Parameters
         ----------
@@ -37,6 +46,10 @@ class GridSearch:
         scoring : str, default='neg_mean_squared_error'
             Scoring metric to evaluate the models. Must be a valid scoring metric for sklearn's GridSearchCV.
         """
+        if params_split is None:
+            params_split = {}
+        if params_norm is None:
+            params_norm = {}
         self.X_train, self.X_test, self.y_train, self.y_test = self.split_data(X, y, **params_split)
         self.models_params: Dict[BaseEstimator, Dict[str, Any]] = models_params
 
@@ -92,13 +105,15 @@ class GridSearch:
         grid = GridSearchCV(model(), params, scoring=self.scoring, **kwargs)
         grid.fit(self.X_train, self.y_train)
 
-        if self.scoring == 'neg_mean_squared_error':
+        if self.scoring == "neg_mean_squared_error":
             y_pred: np.ndarray = grid.predict(self.X_test)
             score: np.ndarray[Any, np.dtype[Any]] = np.sqrt(mean_squared_error(self.y_test, y_pred))
         else:
             score = grid.best_score_
-
-        if (get_scorer(self.scoring)._sign == 1 and score < self.best_score_) or (get_scorer(self.scoring)._sign == -1 and score > self.best_score_):
+        # pylint: disable=W0212
+        if (get_scorer(self.scoring)._sign == 1 and score < self.best_score_) or (
+            get_scorer(self.scoring)._sign == -1 and score > self.best_score_
+        ):
             self.best_score_ = score
             self.best_model: Any = grid.best_estimator_  # store the trained model
             self.best_params: dict = grid.best_params_

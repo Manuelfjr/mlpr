@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 !test/
 main_*.py
+.pylintrc
 
 # C extensions
 *.so

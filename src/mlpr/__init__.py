@@ -1,1 +1,5 @@
-__version__ = "0.0.35"
+"""
+__init__.py file for the mlpr package.
+"""
+
+__version__ = "0.0.36"

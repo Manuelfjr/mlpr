@@ -1,15 +1,19 @@
+"""
+Module for creating various plots for regression analysis.
+"""
+
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from cycler import cycler
+from matplotlib import rcParams
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from scipy.stats import gaussian_kde, ks_2samp
 from statsmodels.distributions.empirical_distribution import ECDF
-from cycler import cycler
-from matplotlib import rcParams
-# 
+
 
 class RegressionPlots:
     """
@@ -22,33 +26,44 @@ class RegressionPlots:
     color_palette: list, optional
         The color palette to use for the plots. If None, the default color palette is used.
     """
+
     def __init__(self, data: pd.DataFrame, color_palette: Optional[List[str]] = None) -> None:
         self.data: pd.DataFrame = data
         self.color_palette: List[str] | None = color_palette
         self.original_prop_cycle = None
+        self._worst_interval = None
+        self.error = None
+        self.std_error = None
         if self.color_palette is not None:
             rcParams["axes.prop_cycle"] = cycler(color=self.color_palette)
 
     def __search(
-        self, metrics_dict: dict = {}, intervals_dict: dict = {}, metric: str = "precision", positive: bool = True
+        self, metrics_dict: dict = None, intervals_dict: dict = None, metric: str = "precision", positive: bool = True
     ) -> dict:
-        method: Dict[Any, Any]= {
-            i_class: content["metrics"][metric][0] if len(
-                content["metrics"][metric]
-                ) == 1 else content["metrics"][metric][int(positive)] 
+        if metrics_dict is None:
+            metrics_dict = {}
+        if intervals_dict is None:
+            intervals_dict = {}
+
+        method: Dict[Any, Any] = {
+            i_class: (
+                content["metrics"][metric][0]
+                if len(content["metrics"][metric]) == 1
+                else content["metrics"][metric][int(positive)]
+            )
             for i_class, content in metrics_dict.items()
         }
         k_worst_class: Union[int, str] = min(method, key=method.get)  # type: ignore
         return intervals_dict[k_worst_class]
 
     def __set_vxlines(
-            self,
-            ax: Axes,
-            interval: Tuple[float, float],
-            xy: Optional[int]=None,
-            color: str='black',
-            linestyle: str='--'
-        ) -> Axes:
+        self,
+        ax: Axes,
+        interval: Tuple[float, float],
+        xy: Optional[int] = None,
+        color: str = "black",
+        linestyle: str = "--",
+    ) -> Axes:
         if np.isneginf(interval[0]):
             ax.axvline(x=interval[1], color=color, linestyle=linestyle)
         elif np.isposinf(interval[1]):
@@ -60,11 +75,6 @@ class RegressionPlots:
             ax.axvline(x=xy, color=color, linestyle=linestyle)
         return ax
 
-    def check_if_inline(self, show_inline: bool) -> None:
-        if not show_inline:
-            plt.close()
-            return None
-
     def _is_grid(self, ax: Optional[Axes], figsize: Tuple[int, int]) -> Tuple[Union[Figure, None], Union[Axes, None]]:
         if ax is None:
             fig, ax = plt.subplots(figsize=figsize)
@@ -72,25 +82,52 @@ class RegressionPlots:
             fig: Figure | None = ax.get_figure()
         return fig, ax
 
+    def check_if_inline(self, show_inline: bool) -> None:
+        """
+        Check if the plot should be displayed inline in Jupyter Notebook or IPython.
+
+        Parameters
+        ----------
+        show_inline : bool
+            Whether to display the plot inline.
+
+        Returns
+        -------
+        None
+        """
+        if not show_inline:
+            plt.close()
+
     def check_color_map(self, step: str = "before") -> None:
+        """
+        Check and set the color map for the plots.
+
+        Parameters
+        ----------
+        step : str, optional
+        The step in the plotting process. Default is "before".
+
+        Returns
+        -------
+        None
+        """
         if (self.color_palette is not None) and (step == "before"):
             self.original_prop_cycle: Any = rcParams["axes.prop_cycle"]
             rcParams["axes.prop_cycle"] = cycler(color=self.color_palette)
         elif (self.color_palette is not None) and (step == "after"):
             rcParams["axes.prop_cycle"] = self.original_prop_cycle
-        return None
-    
+
     def plot_fitted(
         self,
         y_true_col: str,
         y_pred_col: str,
         condition: pd.Series,
-        seed: int=42,
+        seed: int = 42,
         sample_size: Optional[int] = None,
         ax: Optional[Axes] = None,
         figsize: Tuple[int, int] = (12, 6),
         show_inline: bool = False,
-        **kwargs
+        **kwargs,
     ) -> Axes:
         """
         Plot the true and predicted values from the data DataFrame.
@@ -142,7 +179,7 @@ class RegressionPlots:
 
         return ax
 
-    def scatter(
+    def scatter(  # pylint: disable=too-many-locals
         self,
         y_true_col: str,
         y_pred_col: str,
@@ -157,8 +194,8 @@ class RegressionPlots:
         worst_interval: bool = False,
         linestyle_interval: str = "--",
         linecolor_interval: str = "black",
-        metrics: dict = {},
-        class_interval: dict = {},
+        metrics: dict = None,
+        class_interval: dict = None,
         method: str = "precision",
         positive: bool = True,
         **kwargs: Dict[str, Any],
@@ -213,6 +250,11 @@ class RegressionPlots:
             The axes containing the scatter plot.
         """
 
+        if metrics is None:
+            metrics = {}
+        if class_interval is None:
+            class_interval = {}
+        # pylint: disable=W3301
         p1: float | int = max(max(self.data[y_true_col]), max(self.data[y_pred_col]))
         p2: float | int = min(min(self.data[y_true_col]), min(self.data[y_pred_col]))
 
@@ -224,7 +266,9 @@ class RegressionPlots:
 
         if worst_interval:
             self._worst_interval: tuple = self.__search(metrics, class_interval, method, positive)
-            xy: float | int | None = p2 if -np.inf in self._worst_interval else p1 if np.inf in self._worst_interval else None
+            xy: float | int | None = (
+                p2 if -np.inf in self._worst_interval else p1 if np.inf in self._worst_interval else None
+            )
             ax = self.__set_vxlines(ax, self._worst_interval, xy, linecolor_interval, linestyle_interval)
 
         corr: float = self.data[y_true_col].corr(self.data[y_pred_col])
@@ -421,7 +465,7 @@ class RegressionPlots:
     def grid_plot(
         self,
         plot_functions: List[List[str]],
-        plot_args: Dict[str, Dict[str, Any]] = {},
+        plot_args: Dict[str, Dict[str, Any]] = None,
         figsize: tuple[int, int] = (18, 12),
         **kwargs: Dict[str, Any],
     ) -> tuple[Figure, Union[Axes, np.ndarray]]:
@@ -446,10 +490,12 @@ class RegressionPlots:
         axs : array of matplotlib.axes.Axes
             The axes containing the plots.
         """
-        max_cols: int = max(map(len, plot_functions))
-        grid_size: tuple[int, int] = len(plot_functions), max_cols
+        if plot_args is None:
+            plot_args = {}
 
-        fig, axs = plt.subplots(*grid_size, figsize=figsize) 
+        grid_size: tuple[int, int] = len(plot_functions), max(map(len, plot_functions))
+
+        fig, axs = plt.subplots(*grid_size, figsize=figsize)
 
         self.check_color_map()
 

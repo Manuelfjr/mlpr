@@ -1,3 +1,12 @@
+"""
+This module provides utility functions for reading files.
+
+Functions:
+---------
+read_file_yaml(path: str) -> dict
+    Read a YAML file and return its contents as a dictionary.
+"""
+
 import yaml
 
 
@@ -27,7 +36,7 @@ def read_file_yaml(path: str) -> dict:
     >>> read_file_yaml('/path/to/file.yaml')
     {'key1': 'value1', 'key2': 'value2'}
     """
-    with open(path, "r") as file:
+    with open(path, "r", encoding="utf-8") as file:
         data = yaml.safe_load(file)
     return data
 
@@ -52,6 +61,5 @@ def save_file_yaml(data: dict, path: str) -> None:
     >>> data = {'key1': 'value1', 'key2': 'value2'}
     >>> save_file_yaml('/path/to/file.yaml', data)
     """
-    with open(path, "w") as file:
+    with open(path, "w", encoding="utf-8") as file:
         yaml.dump(data, file)
-    return None
