@@ -7,7 +7,7 @@ First, import the necessary modules from the library:
 
 ```python
 from mlpr.ml.supervisioned.regression import metrics, plots
-from mlpr.ml.tunning.grid_search import GridSearch
+from mlpr.ml.supervisioned.tunning.grid_search import GridSearch
 from mlpr.reports.create import ReportGenerator
 ```
 
@@ -274,7 +274,7 @@ fig, axs = rp.grid_plot(
 )
 ```
 
-<a href="https://ibb.co/3pqSmnZ"><img src="https://i.ibb.co/Jv4rj9J/regression-plots.png" alt="regression-plots" border="0"></a>
+[![fig](/assets/regression_plots.png)](/assets/regression_plots.png)
 
 
 ## Reports

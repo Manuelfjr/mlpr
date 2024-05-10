@@ -2,13 +2,14 @@
 Module for performing grid search on machine learning models.
 """
 
-from typing import Any, Dict, Tuple
+from typing import Any, Callable, Dict, Optional, Tuple
 
 import numpy as np
 from sklearn.base import BaseEstimator
-from sklearn.metrics import get_scorer, mean_squared_error
+from sklearn.metrics import make_scorer, mean_squared_error
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.preprocessing import StandardScaler
+from tqdm import tqdm
 
 
 class GridSearch:  # pylint: disable=too-many-instance-attributes
@@ -25,6 +26,7 @@ class GridSearch:  # pylint: disable=too-many-instance-attributes
         normalize: bool = True,
         params_norm: dict = None,
         scoring: str = "neg_mean_squared_error",
+        metrics: Optional[Dict[str, Callable]] = None,  # new parameter
     ) -> None:
         """
         Initialize the GridSearch object.
@@ -52,15 +54,18 @@ class GridSearch:  # pylint: disable=too-many-instance-attributes
             params_norm = {}
         self.X_train, self.X_test, self.y_train, self.y_test = self.split_data(X, y, **params_split)
         self.models_params: Dict[BaseEstimator, Dict[str, Any]] = models_params
+        self.fitted = {}
+        self.metrics = metrics if metrics else {}
 
         if normalize:
             self.normalize_data(**params_norm)
 
-        self.best_score_ = None
         self.best_model = None
         self.best_params = None
         self.scoring: str = scoring
-        self.best_score_: float = np.inf if get_scorer(scoring)._sign == 1 else -np.inf
+        self._scores = None
+        self._metrics = None
+        self._params = None
 
     def split_data(
         self, X: np.ndarray, y: np.ndarray, **kwargs
@@ -104,37 +109,72 @@ class GridSearch:  # pylint: disable=too-many-instance-attributes
         """
         grid = GridSearchCV(model(), params, scoring=self.scoring, **kwargs)
         grid.fit(self.X_train, self.y_train)
+        self.fitted[model.__qualname__] = grid.best_estimator_
 
         if self.scoring == "neg_mean_squared_error":
             y_pred: np.ndarray = grid.predict(self.X_test)
             score: np.ndarray[Any, np.dtype[Any]] = np.sqrt(mean_squared_error(self.y_test, y_pred))
         else:
             score = grid.best_score_
-        # pylint: disable=W0212
-        if (get_scorer(self.scoring)._sign == 1 and score < self.best_score_) or (
-            get_scorer(self.scoring)._sign == -1 and score > self.best_score_
-        ):
-            self.best_score_ = score
-            self.best_model: Any = grid.best_estimator_  # store the trained model
-            self.best_params: dict = grid.best_params_
+
+        if not self.metrics:
+            self._scores = {self.scoring: score}
+        else:
+            self._scores = {
+                name: make_scorer(metric)(grid.best_estimator_, self.X_test, self.y_test)
+                for name, metric in self.metrics.items()
+            }
 
         return self
 
-    def get_best_model(self) -> Tuple[BaseEstimator, Dict[str, Any]]:
+    def get_best_model(self) -> Tuple[Any, Dict]:
         """
-        Get the best model and its parameters.
+        Get the best model and its parameters based on the scoring metric.
+
+        This method identifies the best model based on the scoring metric specified during the grid search.
+        It first determines the name of the best model by finding the maximum score in the metrics dictionary.
+        Then, it sets the best model and its parameters as instance variables.
 
         Returns
         -------
         tuple
-            Best model and its parameters.
+            A tuple containing the best model and its parameters. The first element is the best model
+            and the second element is a dictionary of the best parameters for that model.
         """
+        best_model_name = max(self._metrics.items(), key=lambda x: x[1][self.scoring])[0]
+        self.best_model = [model for model in self.models_params.keys() if model.__qualname__ == best_model_name][0]
+        self.best_model = self.fitted[best_model_name]
+        self.best_params = self._params[best_model_name]
         return self.best_model, self.best_params
 
     def search(self, **kwargs):
         """
         Perform grid search for each model.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            Additional keyword arguments for grid search.
+
+        Returns
+        -------
+        self : GridSearch
+            The fitted GridSearch object.
+
+        Notes
+        -----
+        This method performs grid search for each model in the `models_params` dictionary. It evaluates each model using
+        the specified scoring metric and selects the best model based on the evaluation results.
+
+        Examples
+        --------
+        >>> search_params = {'param1': [1, 2, 3], 'param2': ['a', 'b', 'c']}
+        >>> grid_search = GridSearch(models_params, scoring='accuracy')
+        >>> grid_search.search(params=seach_params)
         """
-        for model, params in self.models_params.items():
+        self._metrics = {}
+        self._params = {i[0].__qualname__: i[1] for i in self.models_params.items()}
+        for model, params in tqdm(list(self.models_params.items())):
             self.evaluate_model(model, params, **kwargs)
+            self._metrics[model.__qualname__] = self._scores
         return self
