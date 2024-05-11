@@ -5,7 +5,7 @@
 <!-- <a href="https://ibb.co/dp1TxTq"><img src="https://i.ibb.co/s1kfzfG/regression-plots.png" alt="regression-plots" border="0"></a> -->
 <!-- <a href="https://ibb.co/T2tydfX"><img src="https://i.ibb.co/6wFQLMh/regression-plots.png" alt="regression-plots" border="0"></a> -->
 
-[![fig0](/assets/regression_plots.png)](/assets/regression_plots.png)
+[![fig0](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)
 
 This repository is a developing library named `MLPR` (Machine Learning Pipeline Report). It aims to facilitate the creation of machine learning models in various areas such as regression, forecasting, classification, and clustering. The library allows the user to perform tuning of these models, generate various types of plots for post-modeling analysis, and calculate various metrics.
 
@@ -27,7 +27,7 @@ pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/
 The example of how to use the module `mlpr.ml.regression` can be view in [`notebooks/regression/`](/notebooks/regression/) -->
 # Tunning
 
-Click [here](/notebooks/supervisioned/tunning/) for contents.
+Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/tunning/) for contents.
 
 MLPR for model selection.
 
@@ -104,7 +104,7 @@ ax.set_yticks([])
 fig.tight_layout()
 ```
 
-![fig0](/assets/tunning_scatter.png)
+[![fig0](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_scatter.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_scatter.png)
 
 ## Cross-validtion
 
@@ -284,12 +284,12 @@ fig.tight_layout()
 ```
 
 
-[![fig1](/assets/tunning_best_model.png)](/assets/tunning_best_model.png)
+[![fig1](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_best_model.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_best_model.png)
 
 
 # Classification: uncertainty estimation
 
-Click [here](/notebooks/supervisioned/classification/) for contents.
+Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/classification/) for contents.
 
 How to use the module for uncertainty estimation in classification tasks.
 
@@ -410,7 +410,8 @@ plt.legend()
 fig.tight_layout()
 ```
 
-[![fig1](/assets/classification_scatter.png)](/assets/classification_scatter.png)
+[![fig1](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_scatter.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_scatter.png)
+
 
 ## Cross-validation
 
@@ -579,7 +580,9 @@ fig_un, ax_un = up.uncertainty(
 )
 ```
 
-[![fig2](/assets/classification_uncertain_best.png)](/assets/classification_uncertain_best.png)
+[![fig2](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_uncertain_best.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_uncertain_best.png)
+
+
 
 ## Plot overall of uncertainty
 
@@ -621,7 +624,8 @@ fig_un, ax_un = up.uncertainty(
 )
 ```
 
-[![fig3](/assets/classification_uncertain_pyramid.png)](/assets/classification_uncertain_pyramid.png)
+[![fig3](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_uncertain_pyramid.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_uncertain_pyramid.png)
+
 
 ## Aleatory uncertainty and Epistemic uncertainty
 
@@ -650,11 +654,11 @@ fig_both, ax_both = up.uncertainty(
 )
 ```
 
-[![fig4](/assets/classification_uncertain_aleatory_epistemic.png)](/assets/classification_uncertain_aleatory_epistemic.png)
+[![fig4](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_uncertain_aleatory_epistemic.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_uncertain_aleatory_epistemic.png)
 
 # Regression
 
-Click [here](/notebooks/supervisioned/regression/) for contents.
+Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/regression/) for contents.
 
 How to use the module for regression problems.
 
@@ -931,7 +935,7 @@ fig, axs = rp.grid_plot(
 )
 ```
 
-[![fig](/assets/regression_plots.png)](/assets/regression_plots.png)
+[![fig](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)
 
 
 ## Reports
