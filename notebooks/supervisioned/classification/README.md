@@ -6,7 +6,6 @@ How to use the module for uncertainty estimation in classification tasks.
 First, import the necessary modules from the library:
 
 ```python
-from typing import Dict
 from functools import partial
 
 import matplotlib.pyplot as plt
@@ -125,7 +124,7 @@ fig.tight_layout()
 ## Cross-validation
 
 ```python
-models: Dict[BaseEstimator, Dict] = {
+models: dict[BaseEstimator, dict] = {
     RandomForestClassifier: {
         'n_estimators': [10, 50, 100, 200],
         'max_depth': [None, 5, 10, 15],

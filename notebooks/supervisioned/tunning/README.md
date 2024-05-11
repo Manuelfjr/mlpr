@@ -7,7 +7,6 @@ MLPR used for model selection.
 First, import the necessary modules from the library:
 
 ```python
-from typing import Dict
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -81,7 +80,7 @@ fig.tight_layout()
 ## Cross-validtion
 
 ```python
-models: Dict[BaseEstimator, Dict] = {
+models: dict[BaseEstimator, dict] = {
     RandomForestClassifier: {
         'n_estimators': [10, 50, 100, 200],
         'max_depth': [None, 5, 10, 15],
