@@ -27,7 +27,7 @@ pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/
 The example of how to use the module `mlpr.ml.regression` can be view in [`notebooks/regression/`](/notebooks/regression/) -->
 # Tunning
 
-Click [here](/notebooks/tunning/) for contents.
+Click [here](/notebooks/supervisioned/tunning/) for contents.
 
 MLPR for model selection.
 
