@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mlpr"
-version = "0.0.37"
+version = "0.0.38"
 authors = ["Manuel Ferreira Junior <ferreira.jr.ufpb@gmail.com>"]
 description = "A library for machine learning pipeline and creation of reports."
 readme = "README.md"
@@ -36,6 +36,8 @@ homepage = "https://github.com/Manuelfjr/mlpr/tree/develop"
 issues = "https://github.com/Manuelfjr/mlpr/issues"
 tracker = "https://github.com/Manuelfjr/mlpr/tree/develop/issues"
 source = "https://github.com/Manuelfjr/mlpr"
+repository = "https://github.com/Manuelfjr/mlpr.git"
+changelog = "https://github.com/Manuelfjr/mlpr/tree/develop/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9"
