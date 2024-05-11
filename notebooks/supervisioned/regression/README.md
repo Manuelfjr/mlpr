@@ -19,6 +19,7 @@ n_feats = 11
 n_instances = 1000
 n_invert = 50
 n_noise = 20
+cv = 10
 ```
 
 ```python
@@ -95,7 +96,7 @@ grid_search = GridSearch(
     normalize=True,
     params_norm=params_norm
 )
-grid_search.search(cv=5, n_jobs=-1)
+grid_search.search(cv=cv, n_jobs=-1)
 
 best_model, best_params = \
     grid_search \

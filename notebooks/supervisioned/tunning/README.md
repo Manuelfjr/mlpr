@@ -73,7 +73,6 @@ ax.set_title("Dataset")
 ax.set_frame_on(False)
 ax.set_xticks([])
 ax.set_yticks([])
-fig.savefig(PROJECT_DIR / "assets" / "tunning_scatter.png", dpi=400)
 fig.tight_layout()
 ```
 
@@ -253,7 +252,6 @@ ax[1].set_title(grid_search.best_model.__class__.__name__)
 ax[1].set_frame_on(False)
 ax[1].set_xticks([])
 ax[1].set_yticks([])
-fig.savefig(PROJECT_DIR / "assets" / "tunning_best_model.png", dpi=400)
 fig.tight_layout()
 ```
 
