@@ -27,7 +27,7 @@
       <a href="https://github.com/Manuelfjr/mlpr/issues"><img src="https://img.shields.io/github/issues-raw/Manuelfjr/mlpr" alt="Open Issues"></a>
       <a href="https://github.com/Manuelfjr/mlpr/issues?q=is%3Aissue+is%3Aclosed"><img src="https://img.shields.io/github/issues-closed-raw/Manuelfjr/mlpr" alt="Closed Issues"></a>
       <a href="https://github.com/Manuelfjr/mlpr/graphs/contributors"><img src="https://img.shields.io/github/contributors/Manuelfjr/mlpr" alt="Contributors"></a>
-      <a href="https://github.com/Manuelfjr/birt-gd"><img src="https://img.shields.io/badge/docs-birtgd-blue?&logo" alt="Docs"></a>
+      <a href="https://github.com/Manuelfjr/mlpr"><img src="https://img.shields.io/badge/docs-mlpr-blue?&logo" alt="Docs"></a>
     </td>
     <td>
       <a href="https://github.com/Manuelfjr"><img src="https://img.shields.io/badge/author-manuelfjr-blue?&logo=github" alt="Author"></a>
@@ -51,7 +51,7 @@
 [![Open Issues](https://img.shields.io/github/issues-raw/Manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/issues)
 [![Closed Issues](https://img.shields.io/github/issues-closed-raw/Manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/issues?q=is%3Aissue+is%3Aclosed)
 [![Contributors](https://img.shields.io/github/contributors/Manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/graphs/contributors)
-[![Docs](https://img.shields.io/badge/docs-birtgd-blue?&logo)](https://github.com/Manuelfjr/birt-gd)
+[![Docs](https://img.shields.io/badge/docs-mlpr-blue?&logo)](https://github.com/Manuelfjr/birt-gd)
 
 [![Author](https://img.shields.io/badge/author-manuelfjr-blue?&logo=github)](https://github.com/Manuelfjr)
 [![https://badgen.net/github/open-issues/manuelfjr/mlpr](https://badgen.net/github/open-issues/manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/issues?q=is%3Aopen+is%3Aissue)
@@ -88,7 +88,6 @@ MLPR for model selection.
 First, import the necessary modules from the library:
 
 ```python
-from typing import Dict
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -104,9 +103,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import make_blobs
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, cohen_kappa_score
 
-
-from src.mlpr.ml.supervisioned.tunning.grid_search import GridSearch
-from utils.reader import read_file_yaml
+from mlpr.ml.supervisioned.tunning.grid_search import GridSearch
 ```
 
 ## Methods
@@ -162,7 +159,7 @@ fig.tight_layout()
 ## Cross-validtion
 
 ```python
-models: Dict[BaseEstimator, Dict] = {
+models: dict[BaseEstimator, dict] = {
     RandomForestClassifier: {
         'n_estimators': [10, 50, 100, 200],
         'max_depth': [None, 5, 10, 15],
@@ -366,9 +363,9 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-from src.mlpr.ml.supervisioned.classification.uncertainty import UncertaintyPlots
-from src.mlpr.ml.supervisioned.classification.utils import calculate_probas
-from src.mlpr.ml.supervisioned.tunning.grid_search import GridSearch
+from mlpr.ml.supervisioned.classification.uncertainty import UncertaintyPlots
+from mlpr.ml.supervisioned.classification.utils import calculate_probas
+from mlpr.ml.supervisioned.tunning.grid_search import GridSearch
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -469,7 +466,7 @@ fig.tight_layout()
 ## Cross-validation
 
 ```python
-models: Dict[BaseEstimator, Dict] = {
+models: dict[BaseEstimator, dict] = {
     RandomForestClassifier: {
         'n_estimators': [10, 50, 100, 200],
         'max_depth': [None, 5, 10, 15],
