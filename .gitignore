@@ -17,6 +17,7 @@ conf/local/*
 .nbqa-flake8
 .pre-commit-config.yaml
 .pre-commit-hooks.yaml
+.pypirc
 
 
 # Exclude extras
