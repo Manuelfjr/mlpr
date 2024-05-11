@@ -7,7 +7,7 @@
     <th>Packages status</th>
     <th>Downloads</th>
     <th>Updates</th>
-    <th>Autor</th>
+    <th>Author</th>
   </tr>
   <tr>
     <td>
