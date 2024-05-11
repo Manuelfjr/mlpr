@@ -105,16 +105,17 @@ ax.set_title("Dataset")
 ax.set_frame_on(False)
 ax.set_xticks([])
 ax.set_yticks([])
-for center, color in zip(centers, colors):
-  ax.scatter(
-    center[0],
-    center[1],
-    color="white",
-    linewidths=3,
-    marker="o",
-    edgecolor="black",
-    s=120
-  )
+for i, (center, color) in enumerate(zip(centers, colors)):
+    ax.scatter(
+        center[0],
+        center[1],
+        color="white",
+        linewidths=3,
+        marker="o",
+        edgecolor="black",
+        s=120,
+        label="center" if i == 0 else None
+    )
 plt.legend()
 fig.tight_layout()
 ```
