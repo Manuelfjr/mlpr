@@ -1,9 +1,62 @@
 # MLPR Library
-[![TestPyPI version](https://img.shields.io/badge/dynamic/json?url=https://test.pypi.org/pypi/mlpr/json&label=TestPyPI%20version&query=$.info.version&color=blue)](https://test.pypi.org/project/mlpr/)
 
-<!-- <img src="assets/regression_plots.png" alt="Regression Plots" href="assets/regression_plots.png"> -->
-<!-- <a href="https://ibb.co/dp1TxTq"><img src="https://i.ibb.co/s1kfzfG/regression-plots.png" alt="regression-plots" border="0"></a> -->
-<!-- <a href="https://ibb.co/T2tydfX"><img src="https://i.ibb.co/6wFQLMh/regression-plots.png" alt="regression-plots" border="0"></a> -->
+<a href="https://www.buymeacoffee.com/manuelfjr" target="_blank"><img src="https://img.shields.io/badge/Buy_Me_A_Coffee-5F7FFF?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" target="_blank"></a>
+
+<table>
+  <tr>
+    <th>Packages status</th>
+    <th>Downloads</th>
+    <th>Updates</th>
+    <th>Autor</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://pypi.org/project/mlpr/"><img src="https://img.shields.io/pypi/v/mlpr?color=blue" alt="PyPI version"></a>
+      <a href="https://pypi.org/project/mlpr/"><img src="https://img.shields.io/pypi/l/mlpr?color=blue" alt="License"></a>
+      <a href="https://pypi.org/project/mlpr/"><img src="https://img.shields.io/pypi/pyversions/mlpr" alt="PyPI - Python Version"></a>
+      <a href="https://pypi.org/project/mlpr/"><img src="https://img.shields.io/pypi/wheel/mlpr" alt="PyPI - Wheel"></a>
+      <a href="https://pypi.org/project/mlpr/"><img src="https://img.shields.io/pypi/status/mlpr" alt="PyPI - Status"></a>
+    </td>
+    <td>
+      <a href="https://pypi.org/project/mlpr/"><img src="https://img.shields.io/pypi/dm/mlpr?style=flat-square&color=darkgreen" alt="PyPI - Downloads"></a>
+      <a href="https://pypi.org/project/mlpr/"><img src="https://img.shields.io/pypi/dw/mlpr?style=flat-square&color=darkgreen" alt="PyPI - Downloads"></a>
+      <a href="https://pypi.org/project/mlpr/"><img src="https://img.shields.io/pypi/dd/mlpr?style=flat-square&color=darkgreen" alt="PyPI - Downloads"></a>
+    </td>
+    <td>
+      <a href="https://github.com/Manuelfjr/mlpr/commits"><img src="https://img.shields.io/github/last-commit/Manuelfjr/mlpr" alt="Last Commit"></a>
+      <a href="https://github.com/Manuelfjr/mlpr/issues"><img src="https://img.shields.io/github/issues-raw/Manuelfjr/mlpr" alt="Open Issues"></a>
+      <a href="https://github.com/Manuelfjr/mlpr/issues?q=is%3Aissue+is%3Aclosed"><img src="https://img.shields.io/github/issues-closed-raw/Manuelfjr/mlpr" alt="Closed Issues"></a>
+      <a href="https://github.com/Manuelfjr/mlpr/graphs/contributors"><img src="https://img.shields.io/github/contributors/Manuelfjr/mlpr" alt="Contributors"></a>
+      <a href="https://github.com/Manuelfjr/birt-gd"><img src="https://img.shields.io/badge/docs-birtgd-blue?&logo" alt="Docs"></a>
+    </td>
+    <td>
+      <a href="https://github.com/Manuelfjr"><img src="https://img.shields.io/badge/author-manuelfjr-blue?&logo=github" alt="Author"></a>
+      <a href="https://github.com/Manuelfjr/mlpr/issues?q=is%3Aopen+is%3Aissue"><img src="https://badgen.net/github/open-issues/manuelfjr/mlpr" alt="Open Issues"></a>
+      <a href="https://github.com/Manuelfjr/mlpr/issues?q=is%3Aissue+is%3Aclosed"><img src="https://badgen.net/github/closed-issues/manuelfjr/mlpr" alt="Closed Issues"></a>
+    </td>
+  </tr>
+</table>
+
+<!-- [![PyPI version](https://img.shields.io/pypi/v/mlpr?color=blue)](https://pypi.org/project/mlpr/)
+[![License](https://img.shields.io/pypi/l/mlpr?color=blue)](https://pypi.org/project/mlpr/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mlpr)](https://pypi.org/project/mlpr/)
+[![PyPI - Wheel](https://img.shields.io/pypi/wheel/mlpr)](https://pypi.org/project/mlpr/)
+[![PyPI - Status](https://img.shields.io/pypi/status/mlpr)](https://pypi.org/project/mlpr/)
+
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/mlpr?style=flat-square&color=darkgreen)](https://pypi.org/project/mlpr/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dw/mlpr?style=flat-square&color=darkgreen)](https://pypi.org/project/mlpr/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dd/mlpr?style=flat-square&color=darkgreen)](https://pypi.org/project/mlpr/)
+
+[![Last Commit](https://img.shields.io/github/last-commit/Manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/commits)
+[![Open Issues](https://img.shields.io/github/issues-raw/Manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/issues)
+[![Closed Issues](https://img.shields.io/github/issues-closed-raw/Manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/issues?q=is%3Aissue+is%3Aclosed)
+[![Contributors](https://img.shields.io/github/contributors/Manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/graphs/contributors)
+[![Docs](https://img.shields.io/badge/docs-birtgd-blue?&logo)](https://github.com/Manuelfjr/birt-gd)
+
+[![Author](https://img.shields.io/badge/author-manuelfjr-blue?&logo=github)](https://github.com/Manuelfjr)
+[![https://badgen.net/github/open-issues/manuelfjr/mlpr](https://badgen.net/github/open-issues/manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/issues?q=is%3Aopen+is%3Aissue)
+[![https://badgen.net/github/closed-issues/manuelfjr/mlpr](https://badgen.net/github/closed-issues/manuelfjr/mlpr)](https://github.com/Manuelfjr/mlpr/issues?q=is%3Aissue+is%3Aclosed) -->
+
 
 [![fig0](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)
 
