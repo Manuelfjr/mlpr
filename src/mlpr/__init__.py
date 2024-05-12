@@ -2,4 +2,4 @@
 __init__.py file for the mlpr package.
 """
 
-__version__ = "0.1.12"
+__version__ = "0.1.13"
