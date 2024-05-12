@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mlpr"
-version = "0.1.13"
+version = "0.1.14"
 authors = ["Manuel Ferreira Junior <ferreira.jr.ufpb@gmail.com>"]
 description = "A library for machine learning pipeline and creation of reports."
 readme = "README.md"
@@ -63,6 +63,10 @@ autopep8 = "^2.0.2"
 xgboost = "^2.0.3"
 jupyter = "^1.0.0"
 psutil = "^5.9.8"
+
+[tool.poetry.group.dev.dependencies]
+xgboost = "^2.0.3"
+lightgbm = "^4.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
