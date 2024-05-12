@@ -371,16 +371,16 @@ class RegressionMetrics:
 
         self._get_interval_class(n_bins, discretizer.bin_edges_[0])
         self.cm: np.ndarray = confusion_matrix(true_bins, pred_bins)
-        self._metrics_cm: dict = self._get_metrics_cm(true_bins, pred_bins)
+
         results: dict = {
             "confusion_matrix": self.cm,
             "kappa_score": kappa,
-            "metrics": self._metrics_cm,
+            "metrics": self._get_metrics_cm(true_bins, pred_bins),
         }
         self._worst_interval_cm: tuple = self.__search(
             results, self._class_intervals, metric=metric, minimize=minimize, use="confusion_matrix"
         )
-        return self.cm, self._metrics_cm
+        return results
 
     def calculate_kappa(  # pylint: disable=too-many-locals
         self,
