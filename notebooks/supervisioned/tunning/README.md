@@ -23,7 +23,7 @@ from sklearn.datasets import make_blobs
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, cohen_kappa_score
 
 
-from src.mlpr.ml.supervisioned.tunning.grid_search import GridSearch
+from mlpr.ml.supervisioned.tunning.grid_search import GridSearch
 from utils.reader import read_file_yaml
 ```
 
@@ -36,8 +36,7 @@ def custom_accuracy_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return accuracy_score(y_true, y_pred, normalize=False)
 ```
 
-## Loading the Data
-Load your dataset. In this example, we're generating a dataset for classification using sklearn:
+## Set parameters
 
 ```python
 n_samples = 1000
@@ -45,11 +44,32 @@ centers = [(0, 0), (3, 4.5)]
 n_features = 2
 cluster_std = 1.3
 random_state = 42
+cv = 5
 ```
 
 ```python
 np.random.seed(random_state)
 ```
+
+```python
+params_split: dict[str, float | int] = {
+    'test_size': 0.25,
+    'random_state': random_state
+}
+params_norm: dict[str, bool] = {'with_mean': True, 'with_std': True}
+model_metrics: dict[str, any] = {
+    'custom_accuracy': custom_accuracy_score,
+    'accuracy': accuracy_score,
+    'precision': precision_score,
+    'recall': recall_score,
+    'kappa': cohen_kappa_score,
+    'f1': f1_score,
+}
+```
+
+## Loading the Data
+Load your dataset. In this example, we're generating a dataset for classification using sklearn:
+
 
 ```python
 X, y = make_blobs(
@@ -137,7 +157,7 @@ grid_search = GridSearch(
     scoring='accuracy',
     metrics=model_metrics
 )
-grid_search.search(cv=5, n_jobs=-1)
+grid_search.search(cv=cv, n_jobs=-1)
 
 best_model, best_params = \
     grid_search \
@@ -256,3 +276,5 @@ fig.tight_layout()
 
 
 [![fig1](/assets/tunning_best_model.png)](/assets/tunning_best_model.png)
+
+

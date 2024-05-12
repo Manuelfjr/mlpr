@@ -78,11 +78,30 @@ pip install mlpr
 <!-- # Regression
 
 The example of how to use the module `mlpr.ml.regression` can be view in [`notebooks/regression/`](/notebooks/regression/) -->
+
+
+# Table of contents
+
+The library current support some features for Machine Learning, being:
+
+**1. Regression**: Support for model selection using a Grid of params to model selection, calculating metrics and generating plots. This module support *spark* dataframe. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/regression/) for examples.
+
+**2. Classification Metrics**: Support for classification metrics and give for the user the possibility to create your own metric. This module spport *spark* dataframe. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/classification/02.ml_metrics.ipynb) for examples.
+
+**3. Tunning**: Support for supervisioned models tunning. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/tunning/) for examples.
+
+
+
+**4. Classification uncertainty**: Support for uncertainty methods estimation. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/classification/01.ml_classification_examples.ipynb) for examples.
+
+
+**5. Surrogates**: Support for training surrogates models, using a white box or less complex that can reproduce the black box behavior or a complex model. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/classification/03.ml_surrogates.ipynb) for examples.
+
 # Tunning
 
 Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/tunning/) for contents.
 
-MLPR for model selection.
+MLPR used for model selection.
 
 ## Importing the Library
 First, import the necessary modules from the library:
@@ -103,7 +122,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import make_blobs
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, cohen_kappa_score
 
+
 from mlpr.ml.supervisioned.tunning.grid_search import GridSearch
+from utils.reader import read_file_yaml
 ```
 
 ## Methods
@@ -115,8 +136,7 @@ def custom_accuracy_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return accuracy_score(y_true, y_pred, normalize=False)
 ```
 
-## Loading the Data
-Load your dataset. In this example, we're generating a dataset for classification using sklearn:
+## Set parameters
 
 ```python
 n_samples = 1000
@@ -124,11 +144,32 @@ centers = [(0, 0), (3, 4.5)]
 n_features = 2
 cluster_std = 1.3
 random_state = 42
+cv = 5
 ```
 
 ```python
 np.random.seed(random_state)
 ```
+
+```python
+params_split: dict[str, float | int] = {
+    'test_size': 0.25,
+    'random_state': random_state
+}
+params_norm: dict[str, bool] = {'with_mean': True, 'with_std': True}
+model_metrics: dict[str, any] = {
+    'custom_accuracy': custom_accuracy_score,
+    'accuracy': accuracy_score,
+    'precision': precision_score,
+    'recall': recall_score,
+    'kappa': cohen_kappa_score,
+    'f1': f1_score,
+}
+```
+
+## Loading the Data
+Load your dataset. In this example, we're generating a dataset for classification using sklearn:
+
 
 ```python
 X, y = make_blobs(
@@ -154,7 +195,7 @@ ax.set_yticks([])
 fig.tight_layout()
 ```
 
-[![fig0](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_scatter.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_scatter.png)
+![fig0](/assets/tunning_scatter.png)
 
 ## Cross-validtion
 
@@ -216,7 +257,7 @@ grid_search = GridSearch(
     scoring='accuracy',
     metrics=model_metrics
 )
-grid_search.search(cv=5, n_jobs=-1)
+grid_search.search(cv=cv, n_jobs=-1)
 
 best_model, best_params = \
     grid_search \
@@ -334,7 +375,8 @@ fig.tight_layout()
 ```
 
 
-[![fig1](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_best_model.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_best_model.png)
+[![fig1](/assets/tunning_best_model.png)](/assets/tunning_best_model.png)
+
 
 
 # Classification: uncertainty estimation
@@ -765,7 +807,7 @@ Define the parameters for your models and use `GridSearch` to find the best mode
 ```python
 models_params = {
     Ridge: {
-        'alpha': [1.0, 10.0, 15, 20],
+        'alpha': [1.0, 10.0, 15., 20.],
         'random_state': [n_seed]
     },
     Lasso: {
@@ -793,11 +835,11 @@ models_params = {
     }
 }
 
-params_split = {
+params_split: dict[str, float | int] = {
     'test_size': 0.25,
     'random_state': n_seed
 }
-params_norm = {'with_mean': True, 'with_std': True}
+params_norm: dict[str, bool] = {'with_mean': True, 'with_std': True}
 
 grid_search = GridSearch(
     X,
@@ -805,9 +847,11 @@ grid_search = GridSearch(
     params_split=params_split,
     models_params=models_params,
     normalize=True,
+    scoring='neg_mean_squared_error',
+    metrics={'neg_mean_squared_error': rmse},
     params_norm=params_norm
 )
-grid_search.search(cv=cv, n_jobs=-1)
+grid_search.search(cv=5, n_jobs=-1)
 
 best_model, best_params = \
     grid_search \
@@ -820,10 +864,12 @@ best_model, best_params = \
 Use the best model to make predictions:
 
 ```python
-data_train["y_pred"] = \
-    grid_search \
-        .best_model \
-            .predict(grid_search.X_train)
+data_train = pd.DataFrame(
+    grid_search.X_train,
+    columns=X.columns
+)
+data_train["y_true"] = grid_search.y_train
+data_train["y_pred"] = grid_search.best_model.predict(grid_search.X_train)
 ```
 
 ## Evaluating the Model
@@ -986,14 +1032,12 @@ fig, axs = rp.grid_plot(
 )
 ```
 
-[![fig](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)
+[![fig](/assets/regression_plots.png)](/assets/regression_plots.png)
 
 
 ## Reports
 
 Here you can see the <a href="https://raw.githack.com/Manuelfjr/mlpr/develop/data/05_reports/report_model.html">report</a> output.
-
-
 
 # Contact
 

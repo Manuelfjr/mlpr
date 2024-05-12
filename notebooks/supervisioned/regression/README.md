@@ -54,7 +54,7 @@ Define the parameters for your models and use `GridSearch` to find the best mode
 ```python
 models_params = {
     Ridge: {
-        'alpha': [1.0, 10.0, 15, 20],
+        'alpha': [1.0, 10.0, 15., 20.],
         'random_state': [n_seed]
     },
     Lasso: {
@@ -82,11 +82,11 @@ models_params = {
     }
 }
 
-params_split = {
+params_split: dict[str, float | int] = {
     'test_size': 0.25,
     'random_state': n_seed
 }
-params_norm = {'with_mean': True, 'with_std': True}
+params_norm: dict[str, bool] = {'with_mean': True, 'with_std': True}
 
 grid_search = GridSearch(
     X,
@@ -94,9 +94,11 @@ grid_search = GridSearch(
     params_split=params_split,
     models_params=models_params,
     normalize=True,
+    scoring='neg_mean_squared_error',
+    metrics={'neg_mean_squared_error': rmse},
     params_norm=params_norm
 )
-grid_search.search(cv=cv, n_jobs=-1)
+grid_search.search(cv=5, n_jobs=-1)
 
 best_model, best_params = \
     grid_search \
@@ -109,10 +111,12 @@ best_model, best_params = \
 Use the best model to make predictions:
 
 ```python
-data_train["y_pred"] = \
-    grid_search \
-        .best_model \
-            .predict(grid_search.X_train)
+data_train = pd.DataFrame(
+    grid_search.X_train,
+    columns=X.columns
+)
+data_train["y_true"] = grid_search.y_train
+data_train["y_pred"] = grid_search.best_model.predict(grid_search.X_train)
 ```
 
 ## Evaluating the Model

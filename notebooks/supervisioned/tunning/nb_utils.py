@@ -4,9 +4,10 @@ This module provides utility functions for the regression notebooks.
 
 import sys
 from pathlib import Path
+from typing import Optional
 
 
-def set_root(level: int = 1) -> Path:
+def set_root(level: int = 1, library: Optional[str] = None) -> Path:
     """Set the root directory of the project.
 
     Parameters:
@@ -35,4 +36,7 @@ def set_root(level: int = 1) -> Path:
         else:
             PROJECT_DIR: Path = PROJECT_DIR.parent
     sys.path.append(str(PROJECT_DIR))
+
+    if library is not None:
+        sys.path.append(str(PROJECT_DIR / library))
     return PROJECT_DIR

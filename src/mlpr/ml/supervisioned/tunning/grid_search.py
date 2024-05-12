@@ -2,14 +2,18 @@
 Module for performing grid search on machine learning models.
 """
 
+import warnings
 from typing import Any, Callable, Dict, Optional, Tuple
 
 import numpy as np
 from sklearn.base import BaseEstimator
+from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.metrics import make_scorer, mean_squared_error
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
+
+warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
 
 
 class GridSearch:  # pylint: disable=too-many-instance-attributes
@@ -25,8 +29,8 @@ class GridSearch:  # pylint: disable=too-many-instance-attributes
         params_split: dict = None,
         normalize: bool = True,
         params_norm: dict = None,
-        scoring: str = "neg_mean_squared_error",
-        metrics: Optional[Dict[str, Callable]] = None,  # new parameter
+        scoring: Optional[str] = None,
+        metrics: Optional[Dict[str, Callable]] = None,
     ) -> None:
         """
         Initialize the GridSearch object.
@@ -45,7 +49,7 @@ class GridSearch:  # pylint: disable=too-many-instance-attributes
             Whether to normalize the data.
         params_norm : dict, default={}
             Parameters for the normalization process.
-        scoring : str, default='neg_mean_squared_error'
+        scoring : str, default=None
             Scoring metric to evaluate the models. Must be a valid scoring metric for sklearn's GridSearchCV.
         """
         if params_split is None:

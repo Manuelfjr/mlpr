@@ -21,9 +21,9 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-from src.mlpr.ml.supervisioned.classification.uncertainty import UncertaintyPlots
-from src.mlpr.ml.supervisioned.classification.utils import calculate_probas
-from src.mlpr.ml.supervisioned.tunning.grid_search import GridSearch
+from mlpr.ml.supervisioned.classification.uncertainty import UncertaintyPlots
+from mlpr.ml.supervisioned.classification.utils import calculate_probas
+from mlpr.ml.supervisioned.tunning.grid_search import GridSearch
 
 import warnings
 warnings.filterwarnings("ignore")
