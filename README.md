@@ -60,6 +60,15 @@
 
 [![fig0](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)
 
+For use examples, click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks).
+
+> :information_source: **For use examples, click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks).**
+
+> :exclamation: **For use examples, click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks).**
+
+> :question: **For use examples, click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks).**
+
+
 This repository is a developing library named `MLPR` (Machine Learning Pipeline Report). It aims to facilitate the creation of machine learning models in various areas such as regression, forecasting, classification, and clustering. The library allows the user to perform tuning of these models, generate various types of plots for post-modeling analysis, and calculate various metrics.
 
 In addition, `MLPR` allows the creation of metric reports using [`Jinja2`](https://pypi.org/project/Jinja2/), including the obtained graphs. The user can customize the report template according to their needs.
