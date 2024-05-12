@@ -195,7 +195,7 @@ ax.set_yticks([])
 fig.tight_layout()
 ```
 
-![fig0](/assets/tunning_scatter.png)
+[![fig0](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_scatter.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_scatter.png)
 
 ## Cross-validtion
 
@@ -374,10 +374,7 @@ ax[1].set_yticks([])
 fig.tight_layout()
 ```
 
-
-[![fig1](/assets/tunning_best_model.png)](/assets/tunning_best_model.png)
-
-
+[![fig1](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_best_model.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/tunning_best_model.png)
 
 # Classification: uncertainty estimation
 
@@ -503,7 +500,7 @@ plt.legend()
 fig.tight_layout()
 ```
 
-[![fig1](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_scatter.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_scatter.png)
+[![fig2](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_scatter.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/classification_scatter.png)
 
 
 ## Cross-validation
@@ -1032,7 +1029,7 @@ fig, axs = rp.grid_plot(
 )
 ```
 
-[![fig](/assets/regression_plots.png)](/assets/regression_plots.png)
+[![fig_reg_](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)](https://raw.githack.com/Manuelfjr/mlpr/develop/assets/regression_plots.png)
 
 
 ## Reports
