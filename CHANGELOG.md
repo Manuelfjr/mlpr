@@ -10,6 +10,7 @@ This is the changelog for the `mlpr` project. Here we break down the changes for
 - Added metrics for classification.
 - Added cross-validation for classification.
 - Added uncertainty generation for classification.
+- Added surrogates for unsupervisioned.
 
 ### Enhancements
 
