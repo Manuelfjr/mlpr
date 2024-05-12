@@ -111,7 +111,11 @@ class GridSearch:  # pylint: disable=too-many-instance-attributes
         params : dict
             Parameters to search.
         """
-        grid = GridSearchCV(model(), params, scoring=self.scoring, **kwargs)
+        if self.scoring in self.metrics:
+            scoring = make_scorer(self.metrics[self.scoring])
+        else:
+            scoring = self.scoring
+        grid = GridSearchCV(model(), params, scoring=scoring, **kwargs)
         grid.fit(self.X_train, self.y_train)
         self.fitted[model.__qualname__] = grid.best_estimator_
 

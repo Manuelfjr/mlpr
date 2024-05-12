@@ -1,17 +1,17 @@
 """
-Module for creation of Surrogates for machine learning models.
+Module for surrogates model on machine learning.
 """
 
 from typing import Callable, Optional, Union
 
 import numpy as np
 import pandas as pd
-from sklearn.base import BaseEstimator, RegressorMixin
+from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
 
 from mlpr.ml.supervisioned.tunning.grid_search import GridSearch
 
 
-class Surrogate(BaseEstimator, RegressorMixin):
+class Surrogate(BaseEstimator, RegressorMixin, ClassifierMixin):
     """
     This class is used to train surrogate models to approximate black box models.
 
@@ -52,9 +52,9 @@ class Surrogate(BaseEstimator, RegressorMixin):
         self.scoring = scoring
         self.best_model_black = None
         self.best_params_black = None
-        self.grid_search_black = None
         self.best_model_white = None
         self.best_params_white = None
+        self.grid_search_black = None
         self.grid_search_white = None
 
     def _grid_search(
