@@ -3,9 +3,14 @@ Module for performing grid search on machine learning models.
 """
 
 import warnings
-from typing import Any, Callable, Dict, Optional, Tuple
+from typing import Any, Callable, Dict, Optional, Tuple, Union
 
 import numpy as np
+from pyspark.ml import Estimator, Pipeline
+from pyspark.ml.evaluation import BinaryClassificationEvaluator, RegressionEvaluator
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.tuning import CrossValidator, CrossValidatorModel, ParamGridBuilder
+from pyspark.sql import DataFrame
 from sklearn.base import BaseEstimator
 from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.metrics import make_scorer, mean_squared_error
@@ -185,4 +190,285 @@ class GridSearch:  # pylint: disable=too-many-instance-attributes
         for model, params in tqdm(list(self.models_params.items())):
             self.evaluate_model(model, params, **kwargs)
             self._metrics[model.__qualname__] = self._scores
+        return self
+
+
+class SparkGridSearch:
+    """
+    A class used to perform grid search for hyperparameter tuning in PySpark.
+
+    ...
+
+    Attributes
+    ----------
+    models_params : dict
+        A dictionary containing the models and their parameters to be used in the grid search.
+    features : list
+        A list of feature names to be used in the models.
+    scoring : str
+        The scoring metric to be used for evaluating the models.
+    model_type : str
+        The type of model ('regression' or 'classification').
+    metrics : dict, optional
+        A dictionary containing the metrics to be used for evaluating the models (default is None).
+    results : dict
+        A dictionary to store the results of the grid search.
+    best_model : str
+        The name of the best model found in the grid search.
+    best_cv_model : CrossValidatorModel
+        The best CrossValidatorModel found in the grid search.
+    best_params : dict
+        The parameters of the best model found in the grid search.
+    cross_validator_params : dict
+        A dictionary containing the parameters to be used in the CrossValidator (default is None).
+    numFolds : int
+        The number of folds to be used in the CrossValidator (default is 2).
+
+    Methods
+    -------
+    evaluate_model(df, target, model, params)
+        Evaluates a model using cross-validation.
+    get_best_model()
+        Returns the best model and its parameters.
+    add_metric(metric_name, func)
+        Adds a new metric to the results.
+    predict(df)
+        Makes predictions using the best model.
+    fit(X, Y)
+        Performs the grid search.
+    """
+
+    def __init__(
+        self,
+        models_params: dict[str, dict[str, list[Union[int, float, str]]]],
+        features: list[str],
+        scoring: str,
+        model_type: str,
+        metrics: dict[str, dict[str, Union[str, RegressionEvaluator, BinaryClassificationEvaluator]]] = None,
+        outputCol: str = "features",
+        predictionCol: str = "prediction",
+        cross_validator_params: dict = None,
+        numFolds: int = 2,
+    ):
+        """
+        Constructs all the necessary attributes for the SparkGridSearch object.
+
+        Parameters
+        ----------
+            models_params : dict
+                A dictionary containing the models and their parameters to be used in the grid search.
+            features : list
+                A list of feature names to be used in the models.
+            scoring : str
+                The scoring metric to be used for evaluating the models.
+            model_type : str
+                The type of model ('regression' or 'classification').
+            metrics : dict, optional
+                A dictionary containing the metrics to be used for evaluating the models (default is None).
+            outputCol : str, optional
+                The name of the output column (default is 'prediction').
+            predictionCol : str, optional
+                The name of the prediction column (default is 'prediction').
+            cross_validator_params : dict, optional
+                A dictionary containing the parameters to be used in the CrossValidator (default is None).
+            numFolds : int, optional
+                The number of folds to be used in the CrossValidator (default is 2).
+        """
+        self.models_params: dict = models_params
+        self.features: list[str] = features
+        self.scoring: str = scoring
+        self.model_type: str = model_type
+        self.outputCol: str = outputCol
+        self.predictionCol: str = predictionCol
+        self.numFolds = numFolds
+        if self.model_type == "regression":
+            self.metrics: dict[str, dict] = (
+                metrics
+                if metrics
+                else {"rmse": {"evaluator": RegressionEvaluator(metricName="rmse"), "goal": "minimize"}}
+            )
+        elif self.model_type == "classification":
+            self.metrics: dict[str, dict] = (
+                metrics
+                if metrics
+                else {
+                    "areaUnderROC": {
+                        "evaluator": BinaryClassificationEvaluator(metricName="areaUnderROC"),
+                        "goal": "maximize",
+                    }
+                }
+            )
+        else:
+            raise ValueError("Invalid model_type. Expected 'regression' or 'classification'")
+        self.results = {}
+        self.best_model = None
+        self.best_cv_model = None
+        self.best_params = None
+        self.cross_validator_params = cross_validator_params if cross_validator_params else {}
+
+    def evaluate_model(
+        self, df: DataFrame, target: str, model: Estimator, params: dict[str, list[Union[int, float, str]]]
+    ) -> CrossValidatorModel:
+        """
+        Evaluates a model using cross-validation.
+
+        Parameters
+        ----------
+            df : DataFrame
+                The data to be used for training and evaluating the model.
+            target : str
+                The target variable.
+            model : Estimator
+                The model to be evaluated.
+            params : dict
+                The parameters to be used in the model.
+
+        Returns
+        -------
+            CrossValidatorModel
+                The trained CrossValidatorModel.
+        """
+        assembler = VectorAssembler(inputCols=self.features, outputCol=self.outputCol)
+        model.setLabelCol(target)
+
+        paramGridBuilder = ParamGridBuilder()
+
+        for param, values in params.items():
+            paramGridBuilder = paramGridBuilder.addGrid(getattr(model, param), values)
+
+        model_metrics = {}
+        for metric_name, metric_info in self.metrics.items():
+            evaluator = metric_info["evaluator"]
+            evaluator.setLabelCol(target)
+            evaluator.setPredictionCol(self.predictionCol)
+            crossval = CrossValidator(
+                estimator=Pipeline(stages=[assembler, model]),
+                estimatorParamMaps=paramGridBuilder.build(),
+                evaluator=evaluator,
+                numFolds=self.numFolds,
+                **self.cross_validator_params,
+            )
+            cvModel = crossval.fit(df)
+            model_metrics[metric_name] = cvModel.avgMetrics
+            model_metrics["params"] = [dict(zip(params.keys(), x)) for x in cvModel.getEstimatorParamMaps()]
+        self.results[model.__class__.__name__] = model_metrics
+        return cvModel
+
+    def get_best_model(self) -> Tuple[Union[CrossValidatorModel, None], Dict]:
+        """
+        Returns the best model and its parameters.
+
+        Returns
+        -------
+            Tuple[Union[CrossValidatorModel, None], dict]
+                The best model and its parameters.
+        """
+        return self.best_cv_model, self.best_params
+
+    def add_metric(self, metric_name: str, func: callable) -> "SparkGridSearch":
+        """
+        Adds a new metric to the results.
+
+        Parameters
+        ----------
+            metric_name : str
+                The name of the metric.
+            func : callable
+                The function to calculate the metric.
+
+        Returns
+        -------
+            SparkGridSearch
+                The current SparkGridSearch object.
+        """
+        for _, model_metrics in self.results.items():
+            if metric_name in model_metrics:
+                model_metrics[metric_name] = list(map(func, model_metrics[metric_name]))
+        return self
+
+    def predict(self, df: DataFrame) -> DataFrame:
+        """
+        Makes predictions using the best model.
+
+        Parameters
+        ----------
+            df : DataFrame
+                The data to be used for making predictions.
+
+        Returns
+        -------
+            DataFrame
+                The predictions made by the best model.
+        """
+        if self.best_cv_model is None:
+            raise RuntimeError("No model has been trained yet.")
+
+        predictions = self.best_cv_model.transform(df)
+        return predictions
+
+    def update_best_model(self, cvModel: CrossValidatorModel, model_class: type[Estimator]):
+        """
+        Updates the best model if the current model is better.
+
+        Parameters
+        ----------
+            cvModel : CrossValidatorModel
+                The current model.
+            model_class : type[Estimator]
+                The class of the current model.
+        """
+        current_model_score = max(self.results[model_class.__name__][self.scoring])
+        best_model_score = max(self.results[self.best_model][self.scoring]) if self.best_model else float("-inf")
+
+        is_maximize_goal = self.metrics[self.scoring]["goal"] == "maximize"
+        is_minimize_goal = self.metrics[self.scoring]["goal"] == "minimize"
+        is_best_model_none = self.best_model is None
+        is_current_better = current_model_score > best_model_score if best_model_score is not None else True
+        is_current_worse = current_model_score < best_model_score if best_model_score is not None else False
+
+        if is_best_model_none or (is_maximize_goal and is_current_better) or (is_minimize_goal and is_current_worse):
+            self.set_best_model(cvModel, model_class)
+
+        return self
+
+    def set_best_model(self, cvModel: CrossValidatorModel, model_class: type[Estimator]):
+        """
+        Sets the current model as the best model.
+
+        Parameters
+        ----------
+            cvModel : CrossValidatorModel
+                The current model.
+            model_class : type[Estimator]
+                The class of the current model.
+        """
+        self.best_model = model_class.__name__
+        self.best_cv_model = cvModel
+
+        model_name = model_class.__name__
+        model_results = self.results[model_name]
+        params_list = model_results["params"]
+        best_params_index = cvModel.avgMetrics.index(max(cvModel.avgMetrics))
+        self.best_params = params_list[best_params_index]
+        return self
+
+    def fit(self, X: DataFrame, Y: str):
+        """
+        Performs the grid search.
+
+        Parameters
+        ----------
+            X : DataFrame
+                The features to be used for training the models.
+            Y : str
+                The target variable.
+
+        Returns
+        -------
+            SparkGridSearch
+                The current SparkGridSearch object.
+        """
+        for model_class, params in self.models_params.items():
+            cvModel = self.evaluate_model(X, Y, model_class(), params)
+            self.update_best_model(cvModel, model_class)
         return self

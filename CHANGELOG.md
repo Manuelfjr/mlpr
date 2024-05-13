@@ -12,7 +12,8 @@ This is the changelog for the `mlpr` project. Here we break down the changes for
 - Added uncertainty generation for classification.
 - Added surrogates for unsupervisioned.
 - Fix bug in GridSearch (it can be used a custom metric to minimize or maximize)
-- Improve surrogate method
+- Improve surrogate method.
+- Added grid search with model selection for PySpark framework.
 
 ### Enhancements
 
