@@ -87,9 +87,9 @@ The example of how to use the module `mlpr.ml.regression` can be view in [`noteb
 
 The library current support some features for Machine Learning, being:
 
-**1. Regression**: Support for model selection using a Grid of params to model selection, calculating metrics and generating plots. This module support *spark* dataframe. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/regression/) for examples.
+**1. Regression**: Support for model selection using a Grid of params to model selection, calculating metrics and generating plots. This module support `spark` dataframe. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/regression/) for examples.
 
-**2. Classification Metrics**: Support for classification metrics and give for the user the possibility to create your own metric. This module spport *spark* dataframe. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/classification/02.ml_metrics.ipynb) for examples.
+**2. Classification Metrics**: Support for classification metrics and give for the user the possibility to create your own metric. This module spport `spark` dataframe. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/classification/02.ml_metrics.ipynb) for examples.
 
 **3. Tunning**: Support for supervisioned models tunning. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/tunning/) for examples.
 
@@ -99,6 +99,8 @@ The library current support some features for Machine Learning, being:
 
 
 **5. Surrogates**: Support for training surrogates models, using a white box or less complex that can reproduce the black box behavior or a complex model. Click [here](https://github.com/Manuelfjr/mlpr/tree/develop/notebooks/supervisioned/classification/03.ml_surrogates.ipynb) for examples.
+
+**6. Tunning (Support for spark)**: Grid search and model selection using Spark framework for Python (`pyspark`).
 
 # Tunning
 
