@@ -57,7 +57,7 @@ params_split: dict[str, float | int] = {
     'random_state': random_state
 }
 params_norm: dict[str, bool] = {'with_mean': True, 'with_std': True}
-model_metrics: dict[str, any] = {
+model_metrics: dict[str, Any] = {
     'custom_accuracy': custom_accuracy_score,
     'accuracy': accuracy_score,
     'precision': precision_score,

@@ -7,6 +7,7 @@ First, import the necessary modules from the library:
 
 ```python
 from functools import partial
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -48,7 +49,7 @@ np.random.seed(random_state)
 ```
 
 ```python
-params: dict[str, dict[str, any]] = {
+params: dict[str, dict[str, Any]] = {
     "n_samples": n_size,
     "n_features": n_feats,
     "centers": centers,
@@ -68,7 +69,7 @@ params_split: dict[str, float | int] = {
 }
 params_norm: dict[str, bool] = {'with_mean': True, 'with_std': True}
 
-model_metrics: dict[str, any] = {
+model_metrics: dict[str, Any] = {
     'custom_accuracy': partial(accuracy_score, normalize=False),
     'accuracy': accuracy_score,
     'precision': partial(precision_score, average='macro'),

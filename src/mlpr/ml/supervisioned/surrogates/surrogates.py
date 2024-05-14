@@ -2,7 +2,7 @@
 Module for surrogates model on machine learning.
 """
 
-from typing import Callable, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -61,7 +61,7 @@ class Surrogate(BaseEstimator, RegressorMixin, ClassifierMixin):
         self,
         X: Union[pd.DataFrame, np.ndarray],
         y: Union[pd.DataFrame, pd.Series, np.ndarray],
-        models: dict[BaseEstimator, dict[str, any]],
+        models: dict[BaseEstimator, dict[str, Any]],
     ) -> GridSearch:
         """
         Perform grid search to find the best model and parameters.
@@ -72,7 +72,7 @@ class Surrogate(BaseEstimator, RegressorMixin, ClassifierMixin):
             The training data.
         y : DataFrame, Series, or ndarray
             The target values.
-        models : dict[BaseEstimator, dict[str, any]]
+        models : dict[BaseEstimator, dict[str, Any]]
             The models and their parameters to search.
 
         Returns

@@ -2,7 +2,7 @@
 This module provides a class for evaluating regression models and calculating various metrics.
 """
 
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -279,7 +279,7 @@ class RegressionMetrics:
             true_bins, pred_bins, labels=np.unique(true_bins)
         )
         accuracy: float = accuracy_score(true_bins, pred_bins)
-        metrics: dict[str, any] = {
+        metrics: dict[str, Any] = {
             "precision": precision,
             "recall": recall,
             "f1_score": f1_score,
@@ -462,8 +462,8 @@ class RegressionMetrics:
 
         self.metrics: dict = {}
         for func_name in metrics_list:
-            func: any = getattr(self, func_name)
-            args: dict[str, any] = {**kwargs, **metrics_params.get(func_name, {})}
+            func: Any = getattr(self, func_name)
+            args: dict[str, Any] = {**kwargs, **metrics_params.get(func_name, {})}
             self.metrics[func_name] = func(**args)
         return self.metrics
 
